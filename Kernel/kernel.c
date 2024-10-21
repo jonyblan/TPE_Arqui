@@ -6,6 +6,10 @@
 #include "idtLoader.h"
 #include <time.h>
 
+enum Colors { BLACK=0, BLUE, GREEN, LIGHT_BLUE, RED, MAGENTA,
+        ORANGE, LIGHT_GREY, DARK_GREY, BRIGHT_BLUE, BRIGHT_GREEN,
+        BRIGHT_LIGHT_BLUE, BRIGHT_RED, PINK, YELLOW, WHITE };
+
 extern uint8_t text;
 extern uint8_t rodata;
 extern uint8_t data;
