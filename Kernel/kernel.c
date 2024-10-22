@@ -107,7 +107,7 @@ int main()
 	ncPrint((char*)sampleDataModuleAddress);*/
 	ncMultipleLines(3);
 	
-	ncPrintln("Lo que hago yo:");
+	/*ncPrintln("Lo que hago yo:");
 	ncPrintln("Materia:");
 	ncPrintFormatln("Arquitectura de Computadoras", 226);
 	
@@ -117,21 +117,14 @@ int main()
 	printDateTime();
 	
 	ncMultipleLines(2);
-
-	ncPrintln("Esperando una tecla...");
-	char c = getInputChar();
-	ncPrint("La tecla ingresada fue: ");
-	ncPrintCharFormat(c, 2);
 	ncMultipleLines(2);
+	int last = 0;*/
 	ncPrintln("Load IDT:");
 	load_idt();
 	ncPrintln("Inf loop:");
-	int last = 0;
+	ncPrintln("Que comando desea correr?");
 	while(1 == 1){
-		last = tickCounter(5, last);
-		if(last%5==0){
-			//ncPrintln("a");
-		}
+
 	}
 	
 
