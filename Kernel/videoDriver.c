@@ -55,5 +55,171 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 }
 
 /** videoDriver.c:
- * Fin del contenido proportcionado por la cátedra
+ * Fin del contenido proporcionado por la cátedra
 */
+
+static uint64_t currentX = 0;
+static uint64_t currentY = 0;
+
+void putCharRelativeFormat(uint8_t start, uint32_t hexColor){
+    for (int i=0; i<CHARACTER_HEIGHT; i++){
+        for(int j=0; j<CHARACTER_WIDTH; j++){
+            putPixel(hexColor & (*(&(start)+i+j) != 0 ? 0x00FFFFFF: 0x00000000), currentX*CHARACTER_WIDTH + j, currentY*CHARACTER_HEIGHT + i);
+        }
+    }
+    currentX++;
+}
+
+/**
+ * Imprime el caracter recibido de font_bitmap y salta al siguiente espacio.
+ * @param row fila del caracter en font_bitmap
+ * @param col columna del caracter en font_bitmap
+ * @param hexColor color en hexa 32b
+ */
+void putCharCoordRelativeFormat(uint8_t row, uint8_t col, uint32_t hexColor){
+    for (int i=0; i<CHARACTER_HEIGHT; i++){
+        for(int j=0; j<CHARACTER_WIDTH; j++){
+            putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), currentX*CHARACTER_WIDTH + j, currentY*CHARACTER_HEIGHT + i);
+        }
+    }
+    currentX++;
+}
+
+void putCharCoordRelative(uint8_t row, uint8_t col){
+    putCharCoordRelativeFormat(row, col, 0x00FFFFFF);
+}
+
+/**
+ * Salta una linea y vuelve al principio de linea
+ */
+void newLine(){
+    currentX = 0;
+    currentY++;
+}
+
+uint8_t codeToPos(uint8_t code){
+    int row;
+    int col;
+    if(code >= '0' && code <= '9'){
+        row = 1;
+        col = code - '0';
+    }
+    if(code >= 'A' && code <= 'Z'){
+        if(code<='O'){
+            row = 2;
+            col = code - 'A' + 1;
+        } else {
+            row = 3;
+            col = code - 'P';
+        }
+    }
+    if(code >= 'a' && code <= 'z'){
+        if(code <= 'o'){
+            row = 4;
+            col = code - 'a' + 1;
+        } else {
+            row = 5;
+            col = code - 'p';
+        }
+    }
+    switch(code){
+        case ' ': row = 0; col = 0; break;
+        case '!': row = 0; col = 1; break;
+        case '"': row = 0; col = 2; break;
+        case '#': row = 0; col = 3; break;
+        case '$': row = 0; col = 4; break;
+        case '%': row = 0; col = 5; break;
+        case '&': row = 0; col = 6; break;
+        case '\'': row = 0; col = 7; break;
+        case '(': row = 0; col = 8; break;
+        case ')': row = 0; col = 9; break;
+        case '*': row = 0; col = 10; break;
+        case '+': row = 0; col = 11; break;
+        case ',': row = 0; col = 12; break;
+        case '-': row = 0; col = 13; break;
+        case '.': row = 0; col = 14; break;
+        case '/': row = 0; col = 15; break;
+
+        case ':': row = 1; col = 10; break;
+        case ';': row = 1; col = 11; break;
+        case '<': row = 1; col = 12; break;
+        case '=': row = 1; col = 13; break;
+        case '>': row = 1; col = 14; break;
+        case '?': row = 1; col = 15; break;
+
+        case '@': row = 2; col = 0; break;
+
+        case '[': row = 3; col = 11; break;
+        case '\\': row = 3; col = 12; break;
+        case ']': row = 3; col = 13; break;
+        case '^': row = 3; col = 14; break;
+        case '_': row = 3; col = 15; break;
+
+        case '`': row = 4; col = 0; break;
+
+        case '{': row = 5; col = 11; break;
+        case '|': row = 5; col = 12; break;
+        case '}': row = 5; col = 13; break;
+        case '~': row = 5; col = 14; break;
+        case '¬': row = 5; col = 15; break;
+    }
+    return font_bitmap[row][col];
+}
+
+void putsFormat(char * string, uint32_t hexColor){
+    for(int i=0; string[i]!=0; i++){
+        uint8_t aux = string[i];
+        putCharRelativeFormat( codeToPos(aux), hexColor);
+    }
+    newLine();
+}
+
+void puts(char * string){
+    putsFormat(string, 0x00FFFFFF);
+}
+
+/*
+void putChar8(uint8_t glyph[FONT_BITMAP_HEIGHT][FONT_BITMAP_WIDTH], uint8_t xPos, uint8_t yPos, uint32_t hexColor, uint64_t x, uint64_t y) {
+    for(int i = 0; i<16; i++){
+        for(int j = 0; j<8; j++){
+            uint8_t auxColor = glyph[xPos+i][yPos+j];
+            uint8_t aux = auxColor;
+            aux |= auxColor >> 2;
+            aux |= auxColor >> 4;
+            putPixel(hexColor & (glyph[xPos+i][yPos+j] != 0 ? 0xFFFFFFFF : 0x00000000), x+j, y+i);
+        }
+    }
+}
+
+void putChar32(uint32_t glyph[FONT_BITMAP_HEIGHT][FONT_BITMAP_WIDTH], uint8_t xPos, uint8_t yPos, uint64_t x, uint64_t y) {
+    for(int i = 0; i<16; i++){
+        for(int j = 0; j<8; j++){
+            putPixel(glyph[xPos+i][yPos+j], x+j, y+i);
+        }
+    }
+}
+
+uint8_t map[FONT_BITMAP_HEIGHT/LETTER_HEIGHT][FONT_BITMAP_WIDTH/LETTER_WIDTH] = {
+        {'@', 'a', 'b', 'c'},
+        {'d', 'e', 'f', 'g'}
+};
+FC(uint8_t caracterBuscado) 'a'
+for(int i = 0; i < algo; i++){
+    for(int j = 0; j < otro; j++){
+        if(map[i][j] == busco){
+            putchar8(i*LETTHER_HIGHTH, j*LETTER_WIDTH);
+        }
+    }
+}
+*/
+
+
+
+void putCharCoord(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y){
+    for (int i=0; i<CHARACTER_HEIGHT; i++){
+        for(int j=0; j<CHARACTER_WIDTH; j++){
+            putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), x+j, y+i);
+        }
+    }
+    VBE_mode_info->framebuffer+=24; //Funciona, ¿por qué? 8*3?
+}

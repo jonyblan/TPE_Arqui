@@ -5,6 +5,7 @@
 #include <naiveConsole.h>
 #include "idtLoader.h"
 #include <time.h>
+#include <videoDriver.h>
 
 enum Colors { BLACK=0, BLUE, GREEN, LIGHT_BLUE, RED, MAGENTA,
         ORANGE, LIGHT_GREY, DARK_GREY, BRIGHT_BLUE, BRIGHT_GREEN,
@@ -118,14 +119,38 @@ int main()
 	
 	ncMultipleLines(2);
 	ncMultipleLines(2);
-	int last = 0;*/
+	int last = 0;
 	ncPrintln("Load IDT:");
 	load_idt();
 	ncPrintln("Inf loop:");
 	ncPrintln("Que comando desea correr?");
 	while(1 == 1){
 
-	}
+	}*/
+
+    //putPixel(0x0000FF00, 0, 0);
+    //putPixel(0x0000FF00, 1, 0);
+    //putPixel(0x0000FF00, 0, 1);
+    for(int i=0; i<8; i++){
+        putPixel(0x0000FF00, i, 16);
+    }
+    //putChar(&(font_bitmap[0][8]), 0x00FF00FF, 0, 0);
+    /*
+    putCharCoord(0, 8, 0x000000FF, 0, 0);
+    putCharCoord(0, 16, 0x00FF0000, 0, 0);
+    newLine();
+    putCharCoord(0, 16, 0x0000FF00, 0, 0);
+     */
+    /*
+    putCharCoordRelative(0, 8, 0x000000FF);
+    putCharCoordRelative(0, 16, 0x0000FF00);
+    newLine();
+    putCharCoordRelative(0, 16, 0x00FF0000);
+    */
+
+    puts("hola");
+
+    //putChar8(font_bitmap, 0, 8, 0x00FF00FF, 0, 0);
 	
 
 	ncPrint("[Finished]");
