@@ -10,7 +10,6 @@ fillRegisters:
 	push rbp
 	mov rbp, rsp
 	
-	mov rax, 80
 	mov [rdi], rax 
 	mov [rdi + 8], rbx
 	mov [rdi + 16], rcx
