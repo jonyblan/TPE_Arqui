@@ -58,46 +58,104 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
  * Fin del contenido proporcionado por la cátedra
 */
 
-static uint64_t currentX = 0;
-static uint64_t currentY = 0;
+static uint64_t cursorX = 0;
+static uint64_t cursorY = 0;
 
-void putCharRelativeFormat(uint8_t start, uint32_t hexColor){
-    for (int i=0; i<CHARACTER_HEIGHT; i++){
-        for(int j=0; j<CHARACTER_WIDTH; j++){
-            putPixel(hexColor & (*(&(start)+i+j) != 0 ? 0x00FFFFFF: 0x00000000), currentX*CHARACTER_WIDTH + j, currentY*CHARACTER_HEIGHT + i);
-        }
-    }
-    currentX++;
-}
+struct coordinates{
+    uint8_t row;
+    uint8_t col;
+};
 
-/**
- * Imprime el caracter recibido de font_bitmap y salta al siguiente espacio.
- * @param row fila del caracter en font_bitmap
- * @param col columna del caracter en font_bitmap
- * @param hexColor color en hexa 32b
- */
-void putCharCoordRelativeFormat(uint8_t row, uint8_t col, uint32_t hexColor){
-    for (int i=0; i<CHARACTER_HEIGHT; i++){
-        for(int j=0; j<CHARACTER_WIDTH; j++){
-            putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), currentX*CHARACTER_WIDTH + j, currentY*CHARACTER_HEIGHT + i);
-        }
-    }
-    currentX++;
-}
-
-void putCharCoordRelative(uint8_t row, uint8_t col){
-    putCharCoordRelativeFormat(row, col, 0x00FFFFFF);
-}
+typedef struct coordinates * Coordinates;
 
 /**
  * Salta una linea y vuelve al principio de linea
  */
 void newLine(){
-    currentX = 0;
-    currentY++;
+    cursorX = 0;
+    cursorY++;
+
+    //Opcion 2: relleno con vacios
+    /*
+     * for(int i=0; i<width; i++) { putChar(' '); }
+     */
 }
 
-uint8_t codeToPos(uint8_t code){
+Coordinates codeToCoord(char code){
+    uint8_t row;
+    uint8_t col;
+    if(code >= '0' && code <= '9'){
+        row = 1;
+        col = code - '0';
+    }
+    if(code >= 'A' && code <= 'Z'){
+        if(code<='O'){
+            row = 2;
+            col = code - 'A' + 1;
+        } else {
+            row = 3;
+            col = code - 'P';
+        }
+    }
+    if(code >= 'a' && code <= 'z'){
+        if(code <= 'o'){
+            row = 4;
+            col = code - 'a' + 1;
+        } else {
+            row = 5;
+            col = code - 'p';
+        }
+    }
+    switch(code){
+        case ' ': row = 0; col = 0; break;
+        case '!': row = 0; col = 1; break;
+        case '"': row = 0; col = 2; break;
+        case '#': row = 0; col = 3; break;
+        case '$': row = 0; col = 4; break;
+        case '%': row = 0; col = 5; break;
+        case '&': row = 0; col = 6; break;
+        case '\'': row = 0; col = 7; break;
+        case '(': row = 0; col = 8; break;
+        case ')': row = 0; col = 9; break;
+        case '*': row = 0; col = 10; break;
+        case '+': row = 0; col = 11; break;
+        case ',': row = 0; col = 12; break;
+        case '-': row = 0; col = 13; break;
+        case '.': row = 0; col = 14; break;
+        case '/': row = 0; col = 15; break;
+
+        case ':': row = 1; col = 10; break;
+        case ';': row = 1; col = 11; break;
+        case '<': row = 1; col = 12; break;
+        case '=': row = 1; col = 13; break;
+        case '>': row = 1; col = 14; break;
+        case '?': row = 1; col = 15; break;
+
+        case '@': row = 2; col = 0; break;
+
+        case '[': row = 3; col = 11; break;
+        case '\\': row = 3; col = 12; break;
+        case ']': row = 3; col = 13; break;
+        case '^': row = 3; col = 14; break;
+        case '_': row = 3; col = 15; break;
+
+        case '`': row = 4; col = 0; break;
+
+        case '{': row = 5; col = 11; break;
+        case '|': row = 5; col = 12; break;
+        case '}': row = 5; col = 13; break;
+        case '~': row = 5; col = 14; break;
+        case '¬': row = 5; col = 15; break;
+    }
+    Coordinates coord;
+    coord->row = row*CHARACTER_HEIGHT;
+    coord->col = col*CHARACTER_WIDTH;
+    return coord;
+}
+
+/*
+//Podria no declarar las variables, pero la implementacion original las usaba
+void codeToCoord(char code, uint8_t * rowPtr, uint8_t * colPtr){
     int row;
     int col;
     if(code >= '0' && code <= '9'){
@@ -163,63 +221,96 @@ uint8_t codeToPos(uint8_t code){
         case '~': row = 5; col = 14; break;
         case '¬': row = 5; col = 15; break;
     }
-    return font_bitmap[row][col];
+    *rowPtr = row*CHARACTER_HEIGHT;
+    *colPtr = col*CHARACTER_WIDTH;
 }
 
-void putsFormat(char * string, uint32_t hexColor){
+
+//Para cuando implementemos punteros
+uint8_t * codeToPos(char code){
+    uint8_t * row;
+    uint8_t * col;
+    codeToCoord(code, row, col);
+    return &font_bitmap[*row][*col];
+}
+ */
+
+/*
+// Debería ser con punteros... pero no anda
+void putCharRelativeFormat(uint8_t ** start, uint32_t hexColor){
+    for (int i=0; i<CHARACTER_HEIGHT; i++){
+        for(int j=0; j<CHARACTER_WIDTH; j++){
+            putPixel(hexColor & (*(start+i+j) != 0 ? 0x00FFFFFF: 0x00000000), cursorX*CHARACTER_WIDTH + j, cursorY*CHARACTER_HEIGHT + i);
+        }
+    }
+    cursorX++;
+}
+ */
+
+/**
+ * Imprime el caracter recibido de font_bitmap con formato y salta al siguiente espacio.
+ * @param row fila del caracter en font_bitmap
+ * @param col columna del caracter en font_bitmap
+ * @param hexColor color en hexa 32b
+ */
+void putCharf(uint8_t row, uint8_t col, uint32_t hexColor){
+    for (int i=0; i<CHARACTER_HEIGHT; i++){
+        for(int j=0; j<CHARACTER_WIDTH; j++){
+            putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), cursorX*CHARACTER_WIDTH + j, cursorY*CHARACTER_HEIGHT + i);
+        }
+    }
+    cursorX++;
+}
+
+/**
+ * Mismo funcionamiento, imprime en blanco
+ * @param row
+ * @param col
+ */
+void putChar(uint8_t row, uint8_t col){
+    putCharf(row, col, 0x00FFFFFF);
+}
+
+/**
+ * Imprime un string con formato
+ * @param string
+ * @param hexColor
+ */
+void putsf(char * string, uint32_t hexColor){
+    uint16_t width = VBE_mode_info->width;
+
     for(int i=0; string[i]!=0; i++){
-        uint8_t aux = string[i];
-        putCharRelativeFormat( codeToPos(aux), hexColor);
+        if(cursorX==width/CHARACTER_WIDTH){
+            newLine();
+        }
+        Coordinates coord = codeToCoord(string[i]);
+        putCharf(coord->row, coord->col, hexColor);
     }
     newLine();
 }
 
+/**
+ * Imprime un string
+ * @param string
+ */
+//Usar putsf(string, 0x00FFFFFF) no anda, pero con aux sí
 void puts(char * string){
-    putsFormat(string, 0x00FFFFFF);
+    char * aux = string;
+    putsf(aux, 0x00FFFFFF);
 }
 
-/*
-void putChar8(uint8_t glyph[FONT_BITMAP_HEIGHT][FONT_BITMAP_WIDTH], uint8_t xPos, uint8_t yPos, uint32_t hexColor, uint64_t x, uint64_t y) {
-    for(int i = 0; i<16; i++){
-        for(int j = 0; j<8; j++){
-            uint8_t auxColor = glyph[xPos+i][yPos+j];
-            uint8_t aux = auxColor;
-            aux |= auxColor >> 2;
-            aux |= auxColor >> 4;
-            putPixel(hexColor & (glyph[xPos+i][yPos+j] != 0 ? 0xFFFFFFFF : 0x00000000), x+j, y+i);
-        }
-    }
-}
-
-void putChar32(uint32_t glyph[FONT_BITMAP_HEIGHT][FONT_BITMAP_WIDTH], uint8_t xPos, uint8_t yPos, uint64_t x, uint64_t y) {
-    for(int i = 0; i<16; i++){
-        for(int j = 0; j<8; j++){
-            putPixel(glyph[xPos+i][yPos+j], x+j, y+i);
-        }
-    }
-}
-
-uint8_t map[FONT_BITMAP_HEIGHT/LETTER_HEIGHT][FONT_BITMAP_WIDTH/LETTER_WIDTH] = {
-        {'@', 'a', 'b', 'c'},
-        {'d', 'e', 'f', 'g'}
-};
-FC(uint8_t caracterBuscado) 'a'
-for(int i = 0; i < algo; i++){
-    for(int j = 0; j < otro; j++){
-        if(map[i][j] == busco){
-            putchar8(i*LETTHER_HIGHTH, j*LETTER_WIDTH);
-        }
-    }
-}
-*/
-
-
-
+/**
+ * Imprime un caracter en una coordenada especifica de la pantalla. No avanza.
+ * @param row
+ * @param col
+ * @param hexColor
+ * @param x
+ * @param y
+ */
 void putCharCoord(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y){
     for (int i=0; i<CHARACTER_HEIGHT; i++){
         for(int j=0; j<CHARACTER_WIDTH; j++){
             putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), x+j, y+i);
         }
     }
-    VBE_mode_info->framebuffer+=24; //Funciona, ¿por qué? 8*3?
 }

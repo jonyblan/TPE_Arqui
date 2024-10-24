@@ -9,18 +9,13 @@
 #define CHARACTER_WIDTH 8
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
-//void putChar(uint8_t glyph[CHARACTER_HEIGHT][CHARACTER_WIDTH], uint32_t hexColor, uint64_t x, uint64_t y);
-//void putCharCoord(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
-void putCharRelativeFormat(uint8_t start, uint32_t hexColor);
-void putCharCoordRelativeFormat(uint8_t row, uint8_t col, uint32_t hexColor);
-void putCharCoordRelative(uint8_t row, uint8_t col);
 void newLine();
-uint8_t codeToPos(uint8_t code);
-void putsFormat(char * string, uint32_t hexColor);
+//void putChar(uint8_t ** start, uint32_t hexColor);
+void putCharf(uint8_t row, uint8_t col, uint32_t hexColor);
+void putChar(uint8_t row, uint8_t col);
+void putsf(char * string, uint32_t hexColor);
 void puts(char * string);
-
-//void putChar8(uint8_t glyph[FONT_BITMAP_HEIGHT][FONT_BITMAP_WIDTH], uint8_t xPos, uint8_t yPos, uint32_t hexColor, uint64_t x, uint64_t y);
-//void putChar32(uint32_t glyph[FONT_BITMAP_HEIGHT][FONT_BITMAP_WIDTH], uint8_t xPos, uint8_t yPos, uint32_t hexColor, uint64_t x, uint64_t y);
+void putCharCoord(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
 
 /**
  * bitmap

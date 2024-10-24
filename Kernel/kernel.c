@@ -127,31 +127,21 @@ int main()
 	while(1 == 1){
 
 	}*/
-
-    //putPixel(0x0000FF00, 0, 0);
-    //putPixel(0x0000FF00, 1, 0);
-    //putPixel(0x0000FF00, 0, 1);
+    
     for(int i=0; i<8; i++){
         putPixel(0x0000FF00, i, 16);
     }
-    //putChar(&(font_bitmap[0][8]), 0x00FF00FF, 0, 0);
-    /*
-    putCharCoord(0, 8, 0x000000FF, 0, 0);
-    putCharCoord(0, 16, 0x00FF0000, 0, 0);
-    newLine();
-    putCharCoord(0, 16, 0x0000FF00, 0, 0);
-     */
-    /*
-    putCharCoordRelative(0, 8, 0x000000FF);
-    putCharCoordRelative(0, 16, 0x0000FF00);
-    newLine();
-    putCharCoordRelative(0, 16, 0x00FF0000);
-    */
 
-    puts("hola");
-
-    //putChar8(font_bitmap, 0, 8, 0x00FF00FF, 0, 0);
-	
+    putsFormat("Hooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooola,  si?",0x00FFFFFF);
+    putsFormat("CHAU LUGO",0x00FF0000);
+    puts(" !\"#$%&'()*+,-./");
+    puts("0123456789:;<=>?");
+    puts("@ABCDEFGHIJKLMNO");
+    puts("PQRSTUVWXYZ[\\]^_");
+    puts("`abcdefghijklmno");
+    puts("pqrstuvwxyz{|}~¬");
+    putCharCoordRelativeFormat(80, 112, 0x00FFFFFF);
+    putCharCoordRelative(80, 120);
 
 	ncPrint("[Finished]");
 	return 0;
