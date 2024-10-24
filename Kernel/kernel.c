@@ -140,8 +140,8 @@ int main()
     puts("PQRSTUVWXYZ[\\]^_");
     puts("`abcdefghijklmno");
     puts("pqrstuvwxyz{|}~¬");
-    putCharf(80, 112, 0x00FFFFFF);
-    putChar(80, 120);
+    putChar('a');
+    putCharf('b', 0x00FF00FF);
 
 	ncPrint("[Finished]");
 	return 0;

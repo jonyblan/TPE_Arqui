@@ -81,32 +81,32 @@ void newLine(){
      */
 }
 
-Coordinates codeToCoord(char code){
+Coordinates charToCoord(char character){
     uint8_t row;
     uint8_t col;
-    if(code >= '0' && code <= '9'){
+    if(character >= '0' && character <= '9'){
         row = 1;
-        col = code - '0';
+        col = character - '0';
     }
-    if(code >= 'A' && code <= 'Z'){
-        if(code<='O'){
+    if(character >= 'A' && character <= 'Z'){
+        if(character<='O'){
             row = 2;
-            col = code - 'A' + 1;
+            col = character - 'A' + 1;
         } else {
             row = 3;
-            col = code - 'P';
+            col = character - 'P';
         }
     }
-    if(code >= 'a' && code <= 'z'){
-        if(code <= 'o'){
+    if(character >= 'a' && character <= 'z'){
+        if(character <= 'o'){
             row = 4;
-            col = code - 'a' + 1;
+            col = character - 'a' + 1;
         } else {
             row = 5;
-            col = code - 'p';
+            col = character - 'p';
         }
     }
-    switch(code){
+    switch(character){
         case ' ': row = 0; col = 0; break;
         case '!': row = 0; col = 1; break;
         case '"': row = 0; col = 2; break;
@@ -253,10 +253,10 @@ void putCharRelativeFormat(uint8_t ** start, uint32_t hexColor){
  * @param col columna del caracter en font_bitmap
  * @param hexColor color en hexa 32b
  */
-void putCharf(uint8_t row, uint8_t col, uint32_t hexColor){
+void putCharCoordf(Coordinates coord, uint32_t hexColor){
     for (int i=0; i<CHARACTER_HEIGHT; i++){
         for(int j=0; j<CHARACTER_WIDTH; j++){
-            putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), cursorX*CHARACTER_WIDTH + j, cursorY*CHARACTER_HEIGHT + i);
+            putPixel(hexColor & (font_bitmap[i+coord->row][j+coord->col] != 0 ? 0x00FFFFFF: 0x00000000), cursorX*CHARACTER_WIDTH + j, cursorY*CHARACTER_HEIGHT + i);
         }
     }
     cursorX++;
@@ -267,8 +267,23 @@ void putCharf(uint8_t row, uint8_t col, uint32_t hexColor){
  * @param row
  * @param col
  */
-void putChar(uint8_t row, uint8_t col){
-    putCharf(row, col, 0x00FFFFFF);
+void putCharCoord(Coordinates coord){
+    putCharCoordf(coord, 0x00FFFFFF);
+}
+
+/**
+ * Imprime un caracter con formato y salta de linea
+ * @param character caracter a imprimir
+ * @param hexColor formato
+ */
+void putCharf(char character, uint32_t hexColor){
+    Coordinates coord = charToCoord(character);
+    putCharCoordf(coord, hexColor);
+}
+
+void putChar(char character){
+    putCharf(character, 0x00FFFFFF);
+    newLine();
 }
 
 /**
@@ -283,8 +298,7 @@ void putsf(char * string, uint32_t hexColor){
         if(cursorX==width/CHARACTER_WIDTH){
             newLine();
         }
-        Coordinates coord = codeToCoord(string[i]);
-        putCharf(coord->row, coord->col, hexColor);
+        putCharf(string[i], hexColor);
     }
     newLine();
 }
@@ -307,7 +321,7 @@ void puts(char * string){
  * @param x
  * @param y
  */
-void putCharCoord(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y){
+void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y){
     for (int i=0; i<CHARACTER_HEIGHT; i++){
         for(int j=0; j<CHARACTER_WIDTH; j++){
             putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), x+j, y+i);

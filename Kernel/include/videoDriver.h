@@ -11,11 +11,13 @@
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void newLine();
 //void putChar(uint8_t ** start, uint32_t hexColor);
-void putCharf(uint8_t row, uint8_t col, uint32_t hexColor);
-void putChar(uint8_t row, uint8_t col);
+//void putCharCoordf(uint8_t row, uint8_t col, uint32_t hexColor);
+//void putCharCoord(uint8_t row, uint8_t col);
+void putCharf(char character, uint32_t hexColor);
+void putChar(char character);
 void putsf(char * string, uint32_t hexColor);
 void puts(char * string);
-void putCharCoord(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
+void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
 
 /**
  * bitmap
