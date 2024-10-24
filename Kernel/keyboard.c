@@ -1,4 +1,5 @@
 #include <time.h>
+#include <exceptions.h>
 #include <naiveConsole.h>
 #include <stdio.h>
 
