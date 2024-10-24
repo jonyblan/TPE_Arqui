@@ -132,16 +132,16 @@ int main()
         putPixel(0x0000FF00, i, 16);
     }
 
-    putsFormat("Hooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooola,  si?",0x00FFFFFF);
-    putsFormat("CHAU LUGO",0x00FF0000);
+    putsf("Hooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooola,  si?",0x00FFFFFF);
+    putsf("CHAU LUGO",0x00FF0000);
     puts(" !\"#$%&'()*+,-./");
     puts("0123456789:;<=>?");
     puts("@ABCDEFGHIJKLMNO");
     puts("PQRSTUVWXYZ[\\]^_");
     puts("`abcdefghijklmno");
     puts("pqrstuvwxyz{|}~¬");
-    putCharCoordRelativeFormat(80, 112, 0x00FFFFFF);
-    putCharCoordRelative(80, 120);
+    putCharf(80, 112, 0x00FFFFFF);
+    putChar(80, 120);
 
 	ncPrint("[Finished]");
 	return 0;
