@@ -283,7 +283,7 @@ void putCharf(char character, uint32_t hexColor){
 
 void putChar(char character){
     putCharf(character, 0x00FFFFFF);
-    newLine();
+	newLine();
 }
 
 /**

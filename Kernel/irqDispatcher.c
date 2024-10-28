@@ -2,10 +2,16 @@
 #include <keyboard.h>
 #include <stdint.h>
 #include <naiveConsole.h>
+#include <time.h>
 
 static void int_20();
+static void int_21();
+char key_handler();
+
+static int waiting = 0;
 
 void irqDispatcher(uint64_t irq) {
+	putChar('s');
 	switch (irq) {
 		case 0:
 			int_20();
@@ -17,20 +23,42 @@ void irqDispatcher(uint64_t irq) {
 	return;
 }
 
-void syscallDispatcher(uint64_t rax, uint64_t rdi, int rsi) {
-	putChar(32, 24);
+char readChar(){
+	return key_handler();
+}
+
+void auxChar(){
+	if(waiting == 1){
+		putChar('c');
+		waiting = 2;
+	}
+}
+
+uint64_t syscallDispatcher(uint64_t rax, uint64_t rdi, int rsi) {
 	switch (rax) {
 		case 0:
-			//read();
+			return (uint64_t)'r';
+			waiting = 1;
+			putChar('d');
+			while(waiting != 2){
+			
+			}
+			putChar('e');
+			return (uint64_t)readChar();
 			break;
 		case 1:
 			//write();
-			//uint8_t aux = '@';
 			char aux = (char)rdi;
-			putChar(32, aux/2);
+			putChar(aux);
+			break;
+		case 2:
+			printDateTime();
+			break;
+		case 3:
+			return ticks_elapsed();
 			break;
 	}
-	return;
+	return 0;
 }
 
 void int_20() {
@@ -38,5 +66,6 @@ void int_20() {
 }
 
 void int_21() {
-	key_handler();
+	putChar('b');
+	//auxChar();
 }

@@ -2,6 +2,7 @@
 #include <time.h>
 #include <stdint.h>
 #include <stdbool.h>
+#include <videoDriver.h>
 
 static uint32_t uintToBase(uint64_t value, char * buffer, uint32_t base);
 
@@ -236,17 +237,17 @@ char * getRtc(uint8_t code){
 
 // TODO: Make a struct for Date and Time
 void printDateTime(){
-	ncPrint(getRtc(7)); // Day
-	ncPrint("/");
-	ncPrint(getRtc(8)); // Month
-	ncPrint("/");
-	ncPrint(getRtc(9)); // year
-	ncPrint(" ");
-	ncPrint(getRtc(4)); // hours
-	ncPrint(":");
-	ncPrint(getRtc(2)); // minutes
-	ncPrint(":");
-	ncPrintln(getRtc(0));// seconds
+	puts(getRtc(7)); // Day
+	puts("/");
+	puts(getRtc(8)); // Month
+	puts("/");
+	puts(getRtc(9)); // year
+	puts(" ");
+	puts(getRtc(4)); // hours
+	puts(":");
+	puts(getRtc(2)); // minutes
+	puts(":");
+	puts(getRtc(0));// seconds
 }
 
 int compareStrings(const char *str1, const char *str2) {
@@ -353,7 +354,6 @@ void changeFlags(int index, uint32_t * flags, bool make){
 #define CANT_CODES_TOTAL 56
 char getCharacter(uint8_t makeCode, uint32_t * flags) {
    	// Lookup table for lowercase characters corresponding to make codes
-
    	char charLookup[CANT_CODES_CHARS] = {
 		'1', // 0x02
 		'2', // 0x03

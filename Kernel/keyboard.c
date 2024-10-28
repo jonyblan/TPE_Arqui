@@ -17,6 +17,8 @@ static int cantFunctions = 1;
 
 int8_t key_pressed();
 
+void putChar(char c);
+
 static uint32_t flags = FULL_OFF_FLAG;
 
 static char * validCalls[] = {
@@ -31,7 +33,7 @@ char getInput(){
 	int8_t num = key_pressed();
 	char aux = (char)num;
 	char c = getCharacter(num, &flags);
-	return c;
+	return aux;
 }
 
 char changeControl(char c){
@@ -129,7 +131,7 @@ void commandSent(){
 	ncPrintln("Command not found");
 }
 
-void key_handler() {
+char key_handler() {
 	char c = getInput();
 	if(c == 0x0A){
 		commandSent();
@@ -154,9 +156,9 @@ void key_handler() {
 	if(flags & NUM_LOCK_FLAG){
 		c = changeNumLocked(c);
 	}
-	ncPrintChar(c);
 	msg[currentIndex] = c;
 	if(currentIndex < 254){
 		currentIndex++;
 	}
+	return c;
 }

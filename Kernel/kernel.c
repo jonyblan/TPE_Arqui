@@ -123,10 +123,8 @@ int main()
 	while(1 == 1){
 
 	}*/
-    	putChar(32, 8);
 	load_idt();
 	((EntryPoint)sampleCodeModuleAddress)();
-    	putChar(32, 40);
 
     /*putsf("Hooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooola,  si?",0x00FFFFFF);
     putsf("CHAU LUGO",0x00FF0000);
@@ -138,7 +136,5 @@ int main()
     puts("pqrstuvwxyz{|}~¬");
     putCharf(80, 112, 0x00FFFFFF);
     putChar(80, 120);*/
-
-	ncPrint("[Finished]");
 	return 0;
 }
