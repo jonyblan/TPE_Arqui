@@ -150,6 +150,25 @@ char * numToString32(uint32_t num){
 	return &ret[index + 1];  // Return pointer to the start of the number
 }
 
+char * numToString64(uint64_t num){
+	static char ret[21];  // Only need 5 characters (up to 65535) + null terminator
+	int index = 4;       // Start filling from the end
+	ret[21] = '\0';       // Null-terminate the string
+
+	if (num == 0) {		// Handle the special case where the number is 0
+		ret[20] = '0';    
+		return &ret[20];  // Return a pointer to the '0'
+	}
+
+	while (num > 0 && index >= 0) {
+		ret[index] = (num % 10) + '0';  // Extract the last digit
+		index--;
+		num /= 10;
+	}
+
+	return &ret[index + 1];  // Return pointer to the start of the number
+}
+
 // TODO: Document this
 int tickCounter(int num, int last){
 	int sec = ticks_elapsed();
