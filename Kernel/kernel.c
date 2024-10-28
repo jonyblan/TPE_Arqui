@@ -90,7 +90,6 @@ void * initializeKernelBinary()
 
 int main()
 {	
-	ncPrint("[Kernel Main]");
 	/*ncNewline();
 	ncPrint("  Sample code module at 0x");
 	ncPrintHex((uint64_t)sampleCodeModuleAddress);
@@ -101,12 +100,10 @@ int main()
 	ncNewline();
 	
 	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
 	ncNewline();
 	
 	ncPrint("  Sample data module contents: ");
 	ncPrint((char*)sampleDataModuleAddress);*/
-	ncMultipleLines(3);
 	
 	/*ncPrintln("Lo que hago yo:");
 	ncPrintln("Materia:");
@@ -121,18 +118,17 @@ int main()
 	ncMultipleLines(2);
 	int last = 0;
 	ncPrintln("Load IDT:");
-	load_idt();
 	ncPrintln("Inf loop:");
 	ncPrintln("Que comando desea correr?");
 	while(1 == 1){
 
 	}*/
-    
-    for(int i=0; i<8; i++){
-        putPixel(0x0000FF00, i, 16);
-    }
+    	putChar(32, 8);
+	load_idt();
+	((EntryPoint)sampleCodeModuleAddress)();
+    	putChar(32, 40);
 
-    putsf("Hooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooola,  si?",0x00FFFFFF);
+    /*putsf("Hooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooola,  si?",0x00FFFFFF);
     putsf("CHAU LUGO",0x00FF0000);
     puts(" !\"#$%&'()*+,-./");
     puts("0123456789:;<=>?");
@@ -140,8 +136,8 @@ int main()
     puts("PQRSTUVWXYZ[\\]^_");
     puts("`abcdefghijklmno");
     puts("pqrstuvwxyz{|}~¬");
-    putChar('a');
-    putCharf('b', 0x00FF00FF);
+    putCharf(80, 112, 0x00FFFFFF);
+    putChar(80, 120);*/
 
 	ncPrint("[Finished]");
 	return 0;
