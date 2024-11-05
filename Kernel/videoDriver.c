@@ -66,8 +66,6 @@ struct coordinates{
     uint8_t col;
 };
 
-typedef struct coordinates * Coordinates;
-
 /**
  * Salta una linea y vuelve al principio de linea
  */
@@ -81,7 +79,7 @@ void newLine(){
      */
 }
 
-Coordinates charToCoord(char character){
+struct coordinates charToCoord(char character){
     uint8_t row;
     uint8_t col;
     if(character >= '0' && character <= '9'){
@@ -147,9 +145,9 @@ Coordinates charToCoord(char character){
         case '~': row = 5; col = 14; break;
         case '¬': row = 5; col = 15; break;
     }
-    Coordinates coord;
-    coord->row = row*CHARACTER_HEIGHT;
-    coord->col = col*CHARACTER_WIDTH;
+    struct coordinates coord;
+    coord.row = row*CHARACTER_HEIGHT;
+    coord.col = col*CHARACTER_WIDTH;
     return coord;
 }
 
@@ -253,10 +251,10 @@ void putCharRelativeFormat(uint8_t ** start, uint32_t hexColor){
  * @param col columna del caracter en font_bitmap
  * @param hexColor color en hexa 32b
  */
-void putCharCoordf(Coordinates coord, uint32_t hexColor){
+void putCharCoordf(struct coordinates coord, uint32_t hexColor){
     for (int i=0; i<CHARACTER_HEIGHT; i++){
         for(int j=0; j<CHARACTER_WIDTH; j++){
-            putPixel(hexColor & (font_bitmap[i+coord->row][j+coord->col] != 0 ? 0x00FFFFFF: 0x00000000), cursorX*CHARACTER_WIDTH + j, cursorY*CHARACTER_HEIGHT + i);
+            putPixel(hexColor & (font_bitmap[i+coord.row][j+coord.col] != 0 ? 0x00FFFFFF: 0x00000000), cursorX*CHARACTER_WIDTH + j, cursorY*CHARACTER_HEIGHT + i);
         }
     }
     cursorX++;
@@ -267,7 +265,7 @@ void putCharCoordf(Coordinates coord, uint32_t hexColor){
  * @param row
  * @param col
  */
-void putCharCoord(Coordinates coord){
+void putCharCoord(struct coordinates coord){
     putCharCoordf(coord, 0x00FFFFFF);
 }
 
@@ -277,7 +275,7 @@ void putCharCoord(Coordinates coord){
  * @param hexColor formato
  */
 void putCharf(char character, uint32_t hexColor){
-    Coordinates coord = charToCoord(character);
+    struct coordinates coord = charToCoord(character);
     putCharCoordf(coord, hexColor);
 }
 
