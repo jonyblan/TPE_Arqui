@@ -1,10 +1,7 @@
-
-#include <naiveConsole.h>
+#include "videoDriver.h"
 
 #define ZERO_EXCEPTION_ID 0
-
-
-static void zero_division();
+#define INVALID_OPCODE_ID 6
 
 typedef struct {
     uint64_t rax;
@@ -62,12 +59,15 @@ void printRegisters(){
 }
 
 void exceptionDispatcher(int exception) {
-	if (exception == ZERO_EXCEPTION_ID)
-		zero_division();
-}
-
-static void zero_division() {
-	
-	ncPrintln("Exception 0: Division by zero");
-	printRegisters();
+    switch(exception) {
+        case ZERO_EXCEPTION_ID:
+            putsf("Exception 0: Division by zero", BRIGHT_RED);
+            break;
+        case INVALID_OPCODE_ID:
+            putsf("Exception 6: Invalid operation code", BRIGHT_RED);
+            break;
+        default:
+            putsf("Uncontrolled exception", BRIGHT_RED);
+    }
+    printRegisters();
 }

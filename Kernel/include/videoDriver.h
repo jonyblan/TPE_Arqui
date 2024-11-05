@@ -8,6 +8,11 @@
 #define CHARACTER_HEIGHT 16
 #define CHARACTER_WIDTH 8
 
+enum Colors { BLACK=0x00000000, BLUE=0x000000CC, GREEN=0x0000CC00, LIGHT_BLUE=0x0000CCCC, RED=0x00CC0000,
+    MAGENTA=0x00FF00FF, ORANGE=0x00FF8000, LIGHT_GREY=0x00CCCCCC, DARK_GREY=0x00333333,
+    BRIGHT_BLUE=0x000000FF, BRIGHT_GREEN=0x0000FF00, BRIGHT_LIGHT_BLUE=0x0000CCCC,
+    BRIGHT_RED=0x00FF0000, PINK=0x00FF99FF, YELLOW=0x00FFFF00, WHITE=0x00FFFFFF };
+
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void newLine();
 //void putChar(uint8_t ** start, uint32_t hexColor);
@@ -18,6 +23,7 @@ void putChar(char character);
 void putsf(char * string, uint32_t hexColor);
 void puts(char * string);
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
+void clear();
 
 /**
  * bitmap

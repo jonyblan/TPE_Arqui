@@ -1,17 +1,15 @@
-#include <time.h>
-#include <keyboard.h>
+#include "keyboard.h"
 #include <stdint.h>
-#include <naiveConsole.h>
+#include "videoDriver.h"
 #include <time.h>
 
 static void int_20();
 static void int_21();
-char key_handler();
 
 static int waiting = 0;
 
 void irqDispatcher(uint64_t irq) {
-	putChar('s');
+	putsf("In irqDispatcher()", YELLOW);
 	switch (irq) {
 		case 0:
 			int_20();
@@ -20,7 +18,8 @@ void irqDispatcher(uint64_t irq) {
 			int_21();
 			break;
 	}
-	return;
+    putsf("Out irqDispatcher()", YELLOW);
+    return;
 }
 
 char readChar(){
@@ -37,13 +36,13 @@ void auxChar(){
 uint64_t syscallDispatcher(uint64_t rax, uint64_t rdi, int rsi) {
 	switch (rax) {
 		case 0:
-			return (uint64_t)'r';
+			//return (uint64_t)'r';
 			waiting = 1;
-			putChar('d');
+			//putChar('d');
 			while(waiting != 2){
 			
 			}
-			putChar('e');
+			//putChar('e');
 			return (uint64_t)readChar();
 			break;
 		case 1:
@@ -66,6 +65,7 @@ void int_20() {
 }
 
 void int_21() {
-	putChar('b');
-	//auxChar();
+	//putChar('b');
+	auxChar();
+    //deberia llamar a key_handler()
 }

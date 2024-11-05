@@ -1,4 +1,3 @@
-/* _loader.c */
 #include <stdint.h>
 #include "arquilib.h"
 
@@ -6,17 +5,15 @@ extern char bss;
 extern char endOfBinary;
 
 int shell();
-//void putc(char c);
 
 void * memset(void * destiny, int32_t c, uint64_t length);
 
 int _start() {
 	//Clean BSS
 	memset(&bss, 0, &endOfBinary - &bss);
-	putChar('K');
+	//putChar('K');
 	return shell();
 }
-
 
 void * memset(void * destiation, int32_t c, uint64_t length) {
 	uint8_t chr = (uint8_t)c;

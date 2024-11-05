@@ -6,3 +6,10 @@ Image/x64BareBonesImage.qcow2
 Image/x64BareBonesImage.vmdk
 Kernel/kernel.bin
 Kernel/videoDriver.o
+*.bin
+Image/x64BareBonesImage.img
+Image/x64BareBonesImage.qcow2
+Image/x64BareBonesImage.vmdk
+*.o
+*.bin
+*.bin

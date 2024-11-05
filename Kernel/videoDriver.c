@@ -1,4 +1,4 @@
-#include <videoDriver.h>
+#include "videoDriver.h"
 #include <stdint.h>
 
 /** videoDriver.c:
@@ -79,6 +79,11 @@ void newLine(){
      */
 }
 
+/**
+ * Recibe un caracter ASCII y obtiene la coordenada correspondiente al primer pixel en font_bitmap
+ * @param character caracter en ASCII
+ * @return par de coordenadas
+ */
 struct coordinates charToCoord(char character){
     uint8_t row;
     uint8_t col;
@@ -281,7 +286,7 @@ void putCharf(char character, uint32_t hexColor){
 
 void putChar(char character){
     putCharf(character, 0x00FFFFFF);
-	newLine();
+	//newLine();
 }
 
 /**
@@ -298,7 +303,7 @@ void putsf(char * string, uint32_t hexColor){
         }
         putCharf(string[i], hexColor);
     }
-    newLine();
+    //newLine();
 }
 
 /**
@@ -325,4 +330,17 @@ void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint
             putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), x+j, y+i);
         }
     }
+}
+
+/**
+ * Limpia la pantalla
+ */
+void clear(){
+    for(int i=0; i<VBE_mode_info->width; i++){
+        for(int j=0; j<VBE_mode_info->height; j++){
+            putPixel(0x00000000, i, j);
+        }
+    }
+    cursorX=0;
+    cursorY=0;
 }

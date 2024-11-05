@@ -1,7 +1,7 @@
 #include <time.h>
 #include <exceptions.h>
-#include <naiveConsole.h>
-#include <stdio.h>
+#include "videoDriver.h"
+//#include <stdio.h>
 
 #define CHANGEABLE_CHARS 21
 
@@ -17,13 +17,12 @@ static int cantFunctions = 1;
 
 int8_t key_pressed();
 
-void putChar(char c);
-
 static uint32_t flags = FULL_OFF_FLAG;
+
 
 static char * validCalls[] = {
 	"printDateTime",
-	NULL
+	0
 };
 
 static char msg[256];
@@ -121,7 +120,7 @@ void commandSent(){
 	msg[currentIndex] = '\0';
 	ncMultipleLines(1);
 	ncPrintln("Sending command...");
-	for (int i = 0; validCalls[i] != NULL; i++) {
+	for (int i = 0; validCalls[i] != 0; i++) {
 		if(compareStrings(validCalls[i], msg)){
 			printDateTime();
 			return ;
