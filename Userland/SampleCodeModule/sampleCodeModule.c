@@ -2,6 +2,7 @@
 
 #include "arquilib.h"
 #include <stdint.h>
+#include "programs.h"
 
 /*
 int shell() {
@@ -24,9 +25,17 @@ int shell() {
 #define TEMP_BUFFER_SIZE 256
 #define TEMP_MAX_PARAM 16
 
-static const char * programs[] = {
+typedef uint64_t (*Program)(uint64_t, const char * []);
 
-}; //todo: esto, que no estoy seguro como hacerlo
+typedef struct {
+    const char * progName;
+    Program prog;
+} ProgramByName;
+
+static const ProgramByName programs[] = {
+        {"echo", (Program)echo}
+
+}; //todo: esto
 static const uint64_t programCount = sizeof(programs);
 
 static uint8_t exit = 0;
@@ -37,7 +46,8 @@ void shellLoop();
 
 void shell(uint64_t argc, const char * argv[]){
     puts("Bienvenido");
-    printDateTime();
+    //todo: salto de linea con puts
+    //printDateTime();
     shellLoop();
     exit=0;
     sys_exit(exit);
@@ -47,7 +57,6 @@ void shellLoop(){
     while(!exit && !shutdown){
         uint64_t i = 0;
         char buffer[TEMP_BUFFER_SIZE];
-
         char c;
         while((c=getChar())!='\n'){
             //TODO: borrar
@@ -55,7 +64,7 @@ void shellLoop(){
             buffer[i++]=c;
             putChar(c);
         }
-        //buffer[i]=0;
+        putChar('\n');
         run(buffer, i);
     }
 }
@@ -80,12 +89,12 @@ void run(const char * buffer, uint64_t bufferLength){
     //busco el programa
     uint8_t found = 0;
     for(uint8_t k=0; k<programCount; k++){
-        //TODO: transformar el nombre del programa en la ubicacion del mismo
-        //TODO: chequear que sea un programa valido, exc 6 sino
+        if(strcmp(prog, programs[k].progName)==0){
+            found = 1;
+            sys_execve(programs[k], spaceCount, progArgv);
+        }
     }
     if(found == 0){
         //todo: tirar exc 6
-    } else {
-        sys_execve(prog, spaceCount, progArgv);
     }
 }

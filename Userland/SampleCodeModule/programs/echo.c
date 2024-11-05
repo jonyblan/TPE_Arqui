@@ -1,5 +1,6 @@
 #include "arquilib.h"
 #include <stdint.h>
+#include "libasm.h"
 
 /**
  * Imprime lo recibido por entrada
@@ -11,6 +12,6 @@ void echo(uint64_t argc, const char * argv[]){
         puts(argv[i]);
         putChar(' ');
     }
-    newLine(); // o putChar('\n');
-    return;
+    putChar('\n');
+    sys_exit(0);
 }

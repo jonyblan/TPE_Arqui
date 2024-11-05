@@ -148,7 +148,7 @@ struct coordinates charToCoord(char character){
         case '|': row = 5; col = 12; break;
         case '}': row = 5; col = 13; break;
         case '~': row = 5; col = 14; break;
-        case '¬': row = 5; col = 15; break;
+        case '\n': row = 5; col = 15; break;
     }
     struct coordinates coord;
     coord.row = row*CHARACTER_HEIGHT;
@@ -257,12 +257,17 @@ void putCharRelativeFormat(uint8_t ** start, uint32_t hexColor){
  * @param hexColor color en hexa 32b
  */
 void putCharCoordf(struct coordinates coord, uint32_t hexColor){
-    for (int i=0; i<CHARACTER_HEIGHT; i++){
-        for(int j=0; j<CHARACTER_WIDTH; j++){
-            putPixel(hexColor & (font_bitmap[i+coord.row][j+coord.col] != 0 ? 0x00FFFFFF: 0x00000000), cursorX*CHARACTER_WIDTH + j, cursorY*CHARACTER_HEIGHT + i);
+    if(coord.row == 5 && coord.col == 15){
+        newLine();
+    } else {
+        for (int i = 0; i < CHARACTER_HEIGHT; i++) {
+            for (int j = 0; j < CHARACTER_WIDTH; j++) {
+                putPixel(hexColor & (font_bitmap[i + coord.row][j + coord.col] != 0 ? 0x00FFFFFF : 0x00000000),
+                         cursorX * CHARACTER_WIDTH + j, cursorY * CHARACTER_HEIGHT + i);
+            }
         }
+        cursorX++;
     }
-    cursorX++;
 }
 
 /**

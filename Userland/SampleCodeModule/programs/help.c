@@ -6,9 +6,9 @@
 void help(){
 
     puts("echo: Imprime lo recibido por entrada estandar");
-    newLine(); //o putChar('\n');
+    putChar('\n');
 
     puts("time: Imprime la hora del sistema");
-    newLine(); //o putChar('\n');
+    putChar('\n');
 
 }

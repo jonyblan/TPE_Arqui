@@ -5,6 +5,7 @@
 #include <time.h>
 #include "idtLoader.h"
 #include "videoDriver.h"
+#include "syscalls.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -49,6 +50,8 @@ void * initializeKernelBinary()
 int main()
 {
 	load_idt();
+    fillSyscalls();
+    clear();
 	((EntryPoint)sampleCodeModuleAddress)();
 
 	return 0;

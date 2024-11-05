@@ -1,7 +1,7 @@
 #include <time.h>
 #include <exceptions.h>
 #include "videoDriver.h"
-//#include <stdio.h>
+#include "keyboard.h"
 
 #define CHANGEABLE_CHARS 21
 
@@ -16,14 +16,16 @@
 static int cantFunctions = 1;
 
 int8_t key_pressed();
+char getInput();
 
 static uint32_t flags = FULL_OFF_FLAG;
 
-
+/*
 static char * validCalls[] = {
 	"printDateTime",
 	0
 };
+ */
 
 static char msg[256];
 static int currentIndex = 0;
@@ -59,51 +61,13 @@ char changeNumLocked(char c){
 
 char changeShift(char c){
 	char noShiftTable[CHANGEABLE_CHARS] = {
-		0x60,
-		'1',
-		'2',
-		'3',
-		'4',
-		'5',
-		'6',
-		'7',
-		'8',
-		'9',
-		'0',
-		'-',
-		'=',
-		'[',
-		']',
-		';',
-		'\'',
-		'\\',
-		',',
-		'.',
-		'/'
+		0x60,'1','2','3','4','5','6','7','8','9','0',
+		'-','=','[',']',';','\'','\\',',','.','/'
 	};
 
 	char withShiftTable[CHANGEABLE_CHARS] = {
-		'~',
-		'!',
-		'@',
-		'#',
-		'$',
-		'%',
-		'^',
-		'&',
-		'*',
-		'(',
-		')',
-		'_',
-		'+',
-		'{',
-		'}',
-		':',
-		'\"',
-		'|',
-		'<',
-		'>',
-		'?'
+		'~','!','@','#','$','%','^','&','*','(',')',
+		'_','+','{','}',':','\"','|','<','>','?'
 	};
 
 	for (uint8_t i = 0; i < CHANGEABLE_CHARS; i++) {
@@ -116,29 +80,29 @@ char changeShift(char c){
 	return c;
 }
 
+char getMsg(){
+    return msg[currentIndex++];
+}
+
 void commandSent(){
 	msg[currentIndex] = '\0';
-	ncMultipleLines(1);
-	ncPrintln("Sending command...");
-	for (int i = 0; validCalls[i] != 0; i++) {
+	/*for (int i = 0; validCalls[i] != 0; i++) {
 		if(compareStrings(validCalls[i], msg)){
 			printDateTime();
 			return ;
 		}
-   	}
+   	}*/
 	currentIndex = 0;
-	ncPrintln("Command not found");
 }
 
 char key_handler() {
 	char c = getInput();
 	if(c == 0x0A){
 		commandSent();
-		ncPrintln("Que comando desea correr?");
-		return ;
+		return;
 	}
 	if(c=='\0'){
-		return ;
+		return;
 	}
 	if(flags & SHIFT_FLAG){
 		c = changeShift(c);
@@ -159,5 +123,4 @@ char key_handler() {
 	if(currentIndex < 254){
 		currentIndex++;
 	}
-	return c;
 }

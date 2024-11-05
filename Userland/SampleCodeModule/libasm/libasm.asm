@@ -14,10 +14,16 @@ section .text
 %macro syscallManager 1
     push rbp
     mov rbp, rsp
+    push rbx
 
+    mov r9, r8
+    mov r8, rcx
+    mov rcx, rsi
+    mov rbx, rdi
     mov rax, %1 ;syscall id (linux)
     int 80h
 
+    pop rbx
     mov rsp, rbp
     pop rbp
     ret
