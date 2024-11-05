@@ -23,3 +23,10 @@ void printDateTime(){
 int getTicks(){
 	return getTicksInt();
 }
+
+void puts(char * s){
+    for(int i = 0; s[i]!='\0'; i++){
+        putChar(s[i]);
+    }
+    return;
+}
