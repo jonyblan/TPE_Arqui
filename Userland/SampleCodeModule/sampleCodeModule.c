@@ -58,13 +58,18 @@ void shellLoop(){
         uint64_t i = 0;
         char buffer[TEMP_BUFFER_SIZE];
         char c;
+
         while((c=getChar())!='\n'){
             //TODO: borrar
             //TODO: fin del buffer
-            buffer[i++]=c;
-            putChar(c);
+            if(c!=0) {
+                if (i + 1 < TEMP_BUFFER_SIZE) {
+                    buffer[i++] = c;
+                    putChar(c);
+                }
+            }
         }
-        putChar('\n');
+        //putChar('\n');
         run(buffer, i);
     }
 }
