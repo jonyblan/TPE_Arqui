@@ -4,24 +4,6 @@
 #include <stdint.h>
 #include "programs.h"
 
-/*
-int shell() {
-	putChar('0');
-	printDateTime();
-	putChar('0' + (char)(getTicks() % 10));
-	char aux = getChar();
-	putChar(aux);
-	int a;
-	while(1){
-		a = getTicks();
-		if(a==5){
-			putChar('5');
-		}
-	}
-	return 0;
-}
- */
-
 #define TEMP_BUFFER_SIZE 256
 #define TEMP_MAX_PARAM 16
 
@@ -46,8 +28,6 @@ void shellLoop();
 
 void shell(uint64_t argc, const char * argv[]){
     puts("Bienvenido");
-    //todo: salto de linea con puts
-    //printDateTime();
     shellLoop();
     exit=0;
     sys_exit(exit);
@@ -69,7 +49,6 @@ void shellLoop(){
                 }
             }
         }
-        //putChar('\n');
         run(buffer, i);
     }
 }

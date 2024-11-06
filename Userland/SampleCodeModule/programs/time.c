@@ -5,6 +5,5 @@
  * Imprime la hora del sistema
  */
 void time(){
-    printDateTime();
-    sys_exit(0);
+    
 }

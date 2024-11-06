@@ -1,5 +1,7 @@
 #ifndef KEYBOARD_H
 #define KEYBOARD_H
-char key_handler();
+
+void key_handler();
+char getInput();
 char getMsg();
 #endif

@@ -1,12 +1,8 @@
 #include <stdint.h>
-#include "include/arquilib.h"
+#include "arquilib.h"
 #include "libasm.h"
 
 void putChar(const char c){
-	/*
-    writeInt(c);
-	return;
-	 */
     sys_write(STANDARD_OUTPUT, &c, 1);
 }
 
@@ -30,11 +26,6 @@ void puts(const char * string){
 }
 
 char getChar(){
-	/*
-    writeInt('a');
-	char c = (char)readInt();
-	return c;
-	 */
     char c;
     sys_read(STANDARD_INPUT, &c, 1);
     return c;
@@ -51,23 +42,3 @@ int8_t strcmp(const char* str1, const char* str2){
 }
 
 //TODO: scan (leer mas de un char)
-
-
-extern void printDateTimeInt();
-extern int getTicksInt();
-
-void printDateTime(){
-	printDateTimeInt();
-}
-
-int getTicks(){
-	return getTicksInt();
-}
-
-/*
-void puts(char * s){
-    for(int i = 0; s[i]!='\0'; i++){
-        putChar(s[i]);
-    }
-    return;
-}*/

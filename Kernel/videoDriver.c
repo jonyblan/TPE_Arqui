@@ -73,10 +73,6 @@ void newLine(){
     cursorX = 0;
     cursorY++;
 
-    //Opcion 2: relleno con vacios
-    /*
-     * for(int i=0; i<width; i++) { putChar(' '); }
-     */
 }
 
 /**
@@ -156,100 +152,6 @@ struct coordinates charToCoord(char character){
     return coord;
 }
 
-/*
-//Podria no declarar las variables, pero la implementacion original las usaba
-void codeToCoord(char code, uint8_t * rowPtr, uint8_t * colPtr){
-    int row;
-    int col;
-    if(code >= '0' && code <= '9'){
-        row = 1;
-        col = code - '0';
-    }
-    if(code >= 'A' && code <= 'Z'){
-        if(code<='O'){
-            row = 2;
-            col = code - 'A' + 1;
-        } else {
-            row = 3;
-            col = code - 'P';
-        }
-    }
-    if(code >= 'a' && code <= 'z'){
-        if(code <= 'o'){
-            row = 4;
-            col = code - 'a' + 1;
-        } else {
-            row = 5;
-            col = code - 'p';
-        }
-    }
-    switch(code){
-        case ' ': row = 0; col = 0; break;
-        case '!': row = 0; col = 1; break;
-        case '"': row = 0; col = 2; break;
-        case '#': row = 0; col = 3; break;
-        case '$': row = 0; col = 4; break;
-        case '%': row = 0; col = 5; break;
-        case '&': row = 0; col = 6; break;
-        case '\'': row = 0; col = 7; break;
-        case '(': row = 0; col = 8; break;
-        case ')': row = 0; col = 9; break;
-        case '*': row = 0; col = 10; break;
-        case '+': row = 0; col = 11; break;
-        case ',': row = 0; col = 12; break;
-        case '-': row = 0; col = 13; break;
-        case '.': row = 0; col = 14; break;
-        case '/': row = 0; col = 15; break;
-
-        case ':': row = 1; col = 10; break;
-        case ';': row = 1; col = 11; break;
-        case '<': row = 1; col = 12; break;
-        case '=': row = 1; col = 13; break;
-        case '>': row = 1; col = 14; break;
-        case '?': row = 1; col = 15; break;
-
-        case '@': row = 2; col = 0; break;
-
-        case '[': row = 3; col = 11; break;
-        case '\\': row = 3; col = 12; break;
-        case ']': row = 3; col = 13; break;
-        case '^': row = 3; col = 14; break;
-        case '_': row = 3; col = 15; break;
-
-        case '`': row = 4; col = 0; break;
-
-        case '{': row = 5; col = 11; break;
-        case '|': row = 5; col = 12; break;
-        case '}': row = 5; col = 13; break;
-        case '~': row = 5; col = 14; break;
-        case '¬': row = 5; col = 15; break;
-    }
-    *rowPtr = row*CHARACTER_HEIGHT;
-    *colPtr = col*CHARACTER_WIDTH;
-}
-
-
-//Para cuando implementemos punteros
-uint8_t * codeToPos(char code){
-    uint8_t * row;
-    uint8_t * col;
-    codeToCoord(code, row, col);
-    return &font_bitmap[*row][*col];
-}
- */
-
-/*
-// Debería ser con punteros... pero no anda
-void putCharRelativeFormat(uint8_t ** start, uint32_t hexColor){
-    for (int i=0; i<CHARACTER_HEIGHT; i++){
-        for(int j=0; j<CHARACTER_WIDTH; j++){
-            putPixel(hexColor & (*(start+i+j) != 0 ? 0x00FFFFFF: 0x00000000), cursorX*CHARACTER_WIDTH + j, cursorY*CHARACTER_HEIGHT + i);
-        }
-    }
-    cursorX++;
-}
- */
-
 /**
  * Imprime el caracter recibido de font_bitmap con formato y salta al siguiente espacio.
  * @param row fila del caracter en font_bitmap
@@ -291,7 +193,6 @@ void putCharf(char character, uint32_t hexColor){
 
 void putChar(char character){
     putCharf(character, 0x00FFFFFF);
-	//newLine();
 }
 
 /**
@@ -308,14 +209,13 @@ void putsf(char * string, uint32_t hexColor){
         }
         putCharf(string[i], hexColor);
     }
-    //newLine();
+    newLine();
 }
 
 /**
  * Imprime un string
  * @param string
  */
-//Usar putsf(string, 0x00FFFFFF) no anda, pero con aux sí
 void puts(char * string){
     char * aux = string;
     putsf(aux, 0x00FFFFFF);

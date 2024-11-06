@@ -42,7 +42,7 @@ static uint64_t sys_exit_impl(int32_t ret){
  */
 
 static uint64_t sys_read_impl(uint32_t fileDesc, char* dest, uint64_t len){
-    if(fileDesc != STANDARD_INPUT) { return -1; }
+    if(fileDesc != STANDARD_INPUT) { return 0; }
     for(uint64_t i=0; i<len; i++){
         char c = getMsg();
         if(c==0) { return i; }

@@ -4,5 +4,5 @@
 * Limpia la pantalla
 */
 void clear(){
-    //clear();, lo llama de videoDriver
+    //clear();, la funcion de videoDriver
 }
