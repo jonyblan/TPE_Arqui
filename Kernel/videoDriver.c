@@ -60,7 +60,7 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 
 static uint8_t cursorX = 0;
 static uint8_t cursorY = 0;
-static uint8_t scale = 1;    //1 es para caracteres de 8*16
+static uint8_t scale = 2;    //1 es para caracteres de 8*16 pix
 
 #define SCALED_CHARACTER_WIDTH (CHARACTER_WIDTH * scale)
 #define SCALED_CHARACTER_HEIGHT (CHARACTER_HEIGHT * scale)
@@ -259,7 +259,7 @@ void putCharc(char character, uint32_t hexColor){
         struct coordinates coord = charToCoord(character);
         for (int i = 0; i < SCALED_CHARACTER_HEIGHT; i++) {
             for (int j = 0; j < SCALED_CHARACTER_WIDTH; j++) {
-                putPixel(hexColor & (font_bitmap[i + coord.row][j + coord.col] != 0 ? WHITE : BLACK),
+                putPixel(hexColor & (font_bitmap[i/scale + coord.row][j/scale + coord.col] != 0 ? WHITE : BLACK),
                          cursorX * SCALED_CHARACTER_WIDTH + j, cursorY * SCALED_CHARACTER_HEIGHT + i);
             }
         }
@@ -324,7 +324,7 @@ void puts(char * string){
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y){
     for (int i=0; i<SCALED_CHARACTER_HEIGHT; i++){
         for(int j=0; j<SCALED_CHARACTER_WIDTH; j++){
-            putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? WHITE: BLACK), x+j, y+i);
+            putPixel(hexColor & (font_bitmap[i/scale+row][j/scale+col] != 0 ? WHITE: BLACK), x+j, y+i);
         }
     }
 }

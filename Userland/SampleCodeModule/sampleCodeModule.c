@@ -88,7 +88,7 @@ void run(const char * buffer){
     }
 
     switch(functionId){
-        case 0: exit=1; break; //exit()
+        //case 0: exit=1; break; //exit()
         case 1: help(); break;
         default: //TODO: arrojar excepcion 6!!!!
     }

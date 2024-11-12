@@ -75,7 +75,7 @@ static uint64_t sys_execve_impl(const char * progPath, uint64_t argc, char * con
 }
  */
 
-static uint64_t sys_time_impl(int32_t * dest){
+static uint64_t sysTimeImpl(int32_t * dest){
     //todo
 }
 
