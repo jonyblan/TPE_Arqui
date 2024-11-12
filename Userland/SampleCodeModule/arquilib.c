@@ -3,7 +3,7 @@
 #include "libasm.h"
 
 void putChar(const char c){
-    sys_write(STANDARD_OUTPUT, &c, 1);
+    sysWrite(STANDARD_OUTPUT, &c, 1);
 }
 
 //TODO: imprimir caracter con color
@@ -22,13 +22,22 @@ uint64_t strlen(const char * string){
 }
 
 void puts(const char * string){
-    sys_write(STANDARD_OUTPUT, string, strlen(string));
+    sysWrite(STANDARD_OUTPUT, string, strlen(string));
+    callNewLine();
 }
 
 char getChar(){
-    char c;
-    sys_read(STANDARD_INPUT, &c, 1);
+    /*
+    //puts("getChar");
+    char c = 0;
+    c = sysReadChar(STANDARD_INPUT);
+    if(c>=0){
+        //puts("c>=0");
+        return c;
+    }
     return c;
+     */
+    return sysReadChar(STANDARD_INPUT);
 }
 
 int8_t strcmp(const char* str1, const char* str2){
@@ -42,3 +51,7 @@ int8_t strcmp(const char* str1, const char* str2){
 }
 
 //TODO: scan (leer mas de un char)
+
+void putPixel(uint32_t hexColor, uint64_t x, uint64_t y){
+    callPutPixel(hexColor, x, y);
+}

@@ -3,7 +3,7 @@
 #include "videoDriver.h"
 #include "keyboard.h"
 
-#define BUFFER_SIZE 256
+#define BUFFER_SIZE 1024
 #define L_SHIFT 42
 #define KEY_RELEASE 0x80
 
@@ -12,6 +12,7 @@ static uint8_t currentIndex = 0;
 static uint8_t returnIndex = 0;
 
 char getMsg(){
+    msg[returnIndex-1]=0;
     if(currentIndex == returnIndex || returnIndex==BUFFER_SIZE)
         return 0;
     else
@@ -134,38 +135,50 @@ void key_handler(){
     char c = 0;
     if(key >= sizeof(keyboard_map)){return;}
     switch(key) {
-        case 0x1C:
-            newLine();
-            break;
-        case 0x3A:
-            if(capslock==1)
-                capslock=0;
-            else
-                capslock=1;
-            break;
-        case 0x2A: case 0x36:
-            shift=1;
-            break;
-        case 0xAA: case 0xB6:
-            shift=0;
-            break;
-        default:
-            c = keyboard_map[key];
-            if(c!=0){
-                if(shift == 1){
-                    if(!(c >= 'a' && c <= 'z')) {
-                        //no es una letra, capslock no tiene efecto
-                        c = shift_map[key];
-                    } else if (capslock==0){
-                        //si capslock esta apagado, las letras shiftean
-                        c = shift_map[key];
-                    }
-                } else if (capslock == 1){
-                    //si shift esta apagado y capslock prendido, las letras shiftean
+    case 0x1C:
+        c = '\n';
+        newLine();
+        //TODO: reset buffer?
+        break;
+    case 0x0E:
+        c = '\b';
+        //TODO: remove from buffer
+        break;
+    case 0x3A:
+        if(capslock==1)
+            capslock=0;
+        else
+            capslock=1;
+        break;
+    case 0x2A: case 0x36:
+        shift=1;
+        break;
+    case 0xAA: case 0xB6:
+        shift=0;
+        break;
+    default:
+        c = keyboard_map[key];
+        if(c!=0){
+            if(shift == 1){
+                if(!(c >= 'a' && c <= 'z')) {
+                    //no es una letra, capslock no tiene efecto
+                    c = shift_map[key];
+                } else if (capslock==0){
+                    //si capslock esta apagado, las letras shiftean
                     c = shift_map[key];
                 }
-                msg[currentIndex++] = c;
-                msg[currentIndex] = 0;
+            } else if (capslock == 1){
+                //si shift esta apagado y capslock prendido, las letras shiftean
+                c = shift_map[key];
             }
+            //En los demas casos, se mantiene el teclado sin shift
+            //msg[currentIndex++] = c;
+            //msg[currentIndex] = 0;
+        }
+    }
+    //por afuera para guardar '\n' y '\b' tambien
+    if(c!=0) {
+        msg[currentIndex++] = c;
+        msg[currentIndex] = 0;
     }
 }

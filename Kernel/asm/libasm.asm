@@ -50,6 +50,6 @@ cpuVendor:
 	ret
 
 getInput:
-    xor rax, rax
+    xor rax, rax ;limpio rax
     in al, 0x60
     ret

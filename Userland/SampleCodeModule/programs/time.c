@@ -5,5 +5,5 @@
  * Imprime la hora del sistema
  */
 void time(){
-    
+
 }

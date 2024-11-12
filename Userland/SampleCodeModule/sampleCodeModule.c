@@ -35,25 +35,39 @@ void shell(uint64_t argc, const char * argv[]){
 
 void shellLoop(){
     while(!exit && !shutdown){
-        uint64_t i = 0;
-        char buffer[TEMP_BUFFER_SIZE];
-        char c;
+        puts("shell");
 
-        while((c=getChar())!='\n'){
+        uint64_t i = 0;
+        char buffer[TEMP_BUFFER_SIZE] = {0};
+        char c = 0;
+
+        while((c=getChar())!='\n' && c >= 0 && i + 1 < TEMP_BUFFER_SIZE){
+            //puts("loop");
             //TODO: borrar
             //TODO: fin del buffer
             if(c!=0) {
-                if (i + 1 < TEMP_BUFFER_SIZE) {
+                if(c == '\b' && i > 0){
+                    puts("borrar");
+                    //todo: borrar (buffer[i] = 0, decrementar i, borrar el caracter (se puede imprimir \b)
+                } else {
+                    //puts("buffer");
                     buffer[i++] = c;
                     putChar(c);
                 }
             }
         }
+        //putChar('\n');    //comentado porque imprime el enter que escribe el usuario
+        /* modelo de uso de putPixel
+        for(int index=64; index<128; index++){
+            putPixel(0x0000FF00, index, 64);
+        }
+         */
         run(buffer, i);
     }
 }
 
 void run(const char * buffer, uint64_t bufferLength){
+    puts("run");
     char prog[TEMP_BUFFER_SIZE];
     char progArgv[TEMP_MAX_PARAM][TEMP_BUFFER_SIZE];
     uint8_t spaceCount = 0;

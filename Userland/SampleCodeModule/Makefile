@@ -20,6 +20,7 @@ debug: all
 
 $(MODULE): $(OBJECTS) $(OBJECTS_LIBASM) $(OBJECTS_LIBC) $(OBJECTS_PROGRAMS)
 	$(GCC) $(GCCFLAGS) -T sampleCodeModule.ld -o ../$(MODULE) $(OBJECTS) $(OBJECTS_LIBASM) $(OBJECTS_LIBC) $(OBJECTS_PROGRAMS)
+	$(GCC) $(GCCFLAGS) -T sampleCodeModule.ld -Wl,--oformat=elf64-x86-64 -o ../$(MODULE_ELF) $(OBJECTS) $(OBJECTS_LIBASM) $(OBJECTS_LIBC) $(OBJECTS_PROGRAMS)
 
 %.o : %.c
 	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@

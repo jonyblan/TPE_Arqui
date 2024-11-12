@@ -5,6 +5,7 @@
 #include <time.h>
 #include "idtLoader.h"
 #include "videoDriver.h"
+#include "keyboard.h"
 #include "syscalls.h"
 
 extern uint8_t text;
@@ -51,6 +52,19 @@ int main()
 {
 	load_idt();
     fillSyscalls();
+
+    char c = 0;
+    while(1){
+        c = getMsg();
+        if(c != NULL) {
+            if(c=='s'){
+                break;
+            } else {
+                putChar(c);
+            }
+        }
+    }
+
     clear();
 	((EntryPoint)sampleCodeModuleAddress)();
 

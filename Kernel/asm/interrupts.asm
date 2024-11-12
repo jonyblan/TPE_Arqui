@@ -117,14 +117,15 @@ picSlaveMask:
     ret
 
 _irq80Handler:
-	mov r10, r9
-	mov r9, r8
-	mov rdx, rcx
-	mov rcx, rsi
+    ;los registros como parametros de C son del orden:
+    ;RDI RSI RDX RCX R8 R9 (usamos 5)
+	mov r8, r10
+	mov rcx, rdx
+	mov rdx, rsi
 	mov rsi, rdi
 	mov rdi, rax
 	call syscallDispatcher
-	ret
+	iretq
 
 
 ;8254 Timer (Timer Tick)

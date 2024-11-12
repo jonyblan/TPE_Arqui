@@ -13,3 +13,9 @@ Image/x64BareBonesImage.vmdk
 *.o
 *.bin
 *.bin
+/.idea
+*.o
+*.o
+*.elf
+*.o
+*.o

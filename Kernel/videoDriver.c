@@ -144,7 +144,7 @@ struct coordinates charToCoord(char character){
         case '|': row = 5; col = 12; break;
         case '}': row = 5; col = 13; break;
         case '~': row = 5; col = 14; break;
-        case '\n': row = 5; col = 15; break;
+        //default: row = 0; col = 0; break;   //por defecto, imprime espacio en blanco, no usar
     }
     struct coordinates coord;
     coord.row = row*CHARACTER_HEIGHT;
@@ -159,9 +159,10 @@ struct coordinates charToCoord(char character){
  * @param hexColor color en hexa 32b
  */
 void putCharCoordf(struct coordinates coord, uint32_t hexColor){
-    if(coord.row == 5 && coord.col == 15){
-        newLine();
-    } else {
+    //uint16_t width = VBE_mode_info->width;
+    //if(coord.row == 5 && coord.col == 15 || cursorX==width/CHARACTER_WIDTH ){
+        //newLine();
+    //} else {
         for (int i = 0; i < CHARACTER_HEIGHT; i++) {
             for (int j = 0; j < CHARACTER_WIDTH; j++) {
                 putPixel(hexColor & (font_bitmap[i + coord.row][j + coord.col] != 0 ? 0x00FFFFFF : 0x00000000),
@@ -169,7 +170,7 @@ void putCharCoordf(struct coordinates coord, uint32_t hexColor){
             }
         }
         cursorX++;
-    }
+    //}
 }
 
 /**
@@ -187,20 +188,24 @@ void putCharCoord(struct coordinates coord){
  * @param hexColor formato
  */
 void putCharf(char character, uint32_t hexColor){
-    struct coordinates coord = charToCoord(character);
-    putCharCoordf(coord, hexColor);
+    uint16_t width = VBE_mode_info->width;
+    if(character == '\n' || cursorX==width/CHARACTER_WIDTH){
+        newLine();
+    }
+    if(character != '\n' && character != '\b') { //alternativa: array de "nonprintable chars"
+        struct coordinates coord = charToCoord(character);
+        putCharCoordf(coord, hexColor);
+    }
 }
 
 void putChar(char character){
     putCharf(character, 0x00FFFFFF);
 }
 
-/**
- * Imprime un string con formato
- * @param string
- * @param hexColor
+/*
+ * Imprime string con color sin saltos
  */
-void putsf(char * string, uint32_t hexColor){
+void printc(char * string, uint32_t hexColor){
     uint16_t width = VBE_mode_info->width;
 
     for(int i=0; string[i]!=0; i++){
@@ -209,6 +214,19 @@ void putsf(char * string, uint32_t hexColor){
         }
         putCharf(string[i], hexColor);
     }
+}
+
+void print(char * string){
+    printc(string, 0x00FFFFFF);
+}
+
+/**
+ * Imprime un string con formato
+ * @param string
+ * @param hexColor
+ */
+void putsf(char * string, uint32_t hexColor){
+    printc(string, hexColor);
     newLine();
 }
 
