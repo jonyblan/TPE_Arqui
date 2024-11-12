@@ -1,11 +1,15 @@
-GLOBAL sys_exit
+;GLOBAL sys_exit
 GLOBAL sysReadChar
 GLOBAL sysWriteColor
-GLOBAL sys_execve
-GLOBAL sys_time
+;GLOBAL sys_execve
+GLOBAL sysTime
 
 GLOBAL callNewLine
 GLOBAL callPutPixel
+GLOBAL callClear
+;GLOBAL callUpscale
+;GLOBAL callDownscale
+;GLOBAL callSetCursor
 
 GLOBAL excDiv0
 GLOBAL excInvalidOpCode

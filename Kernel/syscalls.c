@@ -8,7 +8,7 @@
 #define STANDARD_INPUT 0
 #define STANDARD_OUTPUT 1
 
-#define SYSCALL_COUNT 193
+#define SYSCALL_COUNT 194
 //todo: cambiar el valor a medida que agregue syscalls
 
 static uint64_t sys_exit_impl(int32_t ret);
@@ -19,6 +19,7 @@ static uint64_t sysTimeImpl(int32_t * dest);
 
 void callNewLine();
 void callPutPixel(uint32_t hexColor, uint64_t x, uint64_t y);
+void callClear();
 
 typedef uint64_t (*Syscall)(uint64_t, uint64_t, uint64_t, uint64_t);
 static Syscall syscalls[SYSCALL_COUNT];
@@ -31,6 +32,7 @@ void fillSyscalls(){
     syscalls[13] = (Syscall) sysTimeImpl;
     syscalls[191] = (Syscall) callNewLine;
     syscalls[192] = (Syscall) callPutPixel;
+    syscalls[193] = (Syscall) callClear;
 }
 
 //los registros como parametros de C son del orden:
@@ -85,4 +87,8 @@ void callNewLine(){
 
 void callPutPixel(uint32_t hexColor, uint64_t x, uint64_t y){
     putPixel(hexColor, x, y);
+}
+
+void callClear(){
+    clear();
 }

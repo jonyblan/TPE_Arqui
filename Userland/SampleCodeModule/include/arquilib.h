@@ -16,6 +16,11 @@ void print(const char * string);
 void putChar(const char c);
 void puts(const char * string);
 char getChar();
-int8_t strcmp(const char* str1, const char* str2);
 
+void clear();
+/*
+void upscale();
+void downscale();
+void setCursor();
+*/
 #endif

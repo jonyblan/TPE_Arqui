@@ -3,6 +3,7 @@
 #include "arquilib.h"
 #include <stdint.h>
 #include "programs.h"
+#include "utillib.h"
 
 #define TEMP_BUFFER_SIZE 256
 #define TEMP_MAX_PARAM 5
@@ -23,7 +24,7 @@ static const ProgramByName programs[] = {
 static const uint64_t programCount = sizeof(programs);
  */
 
-static const char * functions[]={ "exit", "help" };
+static const char * functions[]={ "exit", "help", "clear" };
 
 static const uint16_t functionCount = sizeof(functions);
 
@@ -90,6 +91,7 @@ void run(const char * buffer){
     switch(functionId){
         //case 0: exit=1; break; //exit()
         case 1: help(); break;
+        case 2: clear(); break;
         default: //TODO: arrojar excepcion 6!!!!
     }
 
