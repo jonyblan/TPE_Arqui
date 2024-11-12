@@ -60,14 +60,61 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 
 static uint8_t cursorX = 0;
 static uint8_t cursorY = 0;
+static uint8_t scale = 1;    //1 es para caracteres de 8*16
+
+#define SCALED_CHARACTER_WIDTH (CHARACTER_WIDTH * scale)
+#define SCALED_CHARACTER_HEIGHT (CHARACTER_HEIGHT * scale)
+#define WIDTH_IN_CHARS (VBE_mode_info->width / SCALED_CHARACTER_WIDTH)
+#define HEIGHT_IN_CHARS (VBE_mode_info->height / SCALED_CHARACTER_HEIGHT)
 
 struct coordinates{
     uint8_t row;
     uint8_t col;
 };
 
+/**
+ * Cambia la escala de los caracteres.
+ * 1: 100% (original)
+ * 2: 200%
+ * 3: 300%
+ * 4: 400%
+ */
+void setScale(uint8_t newScale){
+    if(scale >= 1 && scale <= 4)
+        scale = newScale;
+}
+
+void upscale(){
+    setScale(scale + 1);
+}
+
+void downscale(){
+    setScale(scale - 1);
+}
+
+/**
+ * Setea el cursor a una coordenada particular, respetando el tamaño de los chars
+ * @param x coordenada en x
+ * @param y coordenada en y
+ */
+void setCursor(uint8_t x, uint8_t y) {
+    if(x < WIDTH_IN_CHARS){
+        cursorX = x;
+    } else {
+        cursorX = WIDTH_IN_CHARS;
+    }
+    if(y < HEIGHT_IN_CHARS){
+        cursorY = y;
+    } else {
+        cursorY = HEIGHT_IN_CHARS;
+    }
+}
+
+/**
+* Retorna el color del pixel de las coordenadas de pantalla x, y
+* Basado en putPixel, funcion de la catedra
+*/
 uint32_t getPixel(uint64_t x, uint64_t y){
-    //Basado en putPixel, funcion de la catedra
     uint8_t * framebuffer = (uint8_t *) VBE_mode_info->framebuffer;
     uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
     uint32_t toReturn;
@@ -85,14 +132,14 @@ void newLine(){
      * //TODO: si me quedo sin espacio en pantalla, mover todo hacia arriba
     uint16_t width = VBE_mode_info->width;
     uint16_t height = VBE_mode_info->height;
-    if(cursorY == height/CHARACTER_HEIGHT - 1){
+    if(cursorY == height/SCALED_CHARACTER_HEIGHT - 1){
         for(int i=0; i<width; i++){
-            for(int j=0; j<height-CHARACTER_HEIGHT; j++){
-                putPixel(getPixel(i+CHARACTER_HEIGHT, j+CHARACTER_HEIGHT), i, j);
+            for(int j=0; j<height-SCALED_CHARACTER_HEIGHT; j++){
+                putPixel(getPixel(i+SCALED_CHARACTER_HEIGHT, j+SCALED_CHARACTER_HEIGHT), i, j);
             }
         }
         for(int k=0; k<width; k++){
-            for(int l=0; l=(int)CHARACTER_HEIGHT; l++){
+            for(int l=0; l=(int)SCALED_CHARACTER_HEIGHT; l++){
                 putPixel(BLACK, k, l);
             }
         }
@@ -108,12 +155,12 @@ void erase(){
     //static uint8_t base = cursorY; con cursorY>base
     if(cursorX==0 && cursorY>0){
         cursorY--;
-        cursorX=width/CHARACTER_WIDTH;
+        cursorX=WIDTH_IN_CHARS;
     }
     cursorX--;
-    for (int i = 0; i < CHARACTER_HEIGHT; i++) {
-        for (int j = 0; j < CHARACTER_WIDTH; j++) {
-            putPixel(BLACK,cursorX * CHARACTER_WIDTH + j, cursorY * CHARACTER_HEIGHT + i);
+    for (int i = 0; i < SCALED_CHARACTER_HEIGHT; i++) {
+        for (int j = 0; j < SCALED_CHARACTER_WIDTH; j++) {
+            putPixel(BLACK,cursorX * SCALED_CHARACTER_WIDTH + j, cursorY * SCALED_CHARACTER_HEIGHT + i);
         }
     }
 }
@@ -187,7 +234,7 @@ struct coordinates charToCoord(char character){
         case '|': row = 5; col = 12; break;
         case '}': row = 5; col = 13; break;
         case '~': row = 5; col = 14; break;
-        //default: row = 0; col = 0; break;   //por defecto, imprime espacio en blanco, no usar
+        //default: row = 0; col = 0; break;   //no usar
     }
     struct coordinates coord;
     coord.row = row*CHARACTER_HEIGHT;
@@ -196,38 +243,13 @@ struct coordinates charToCoord(char character){
 }
 
 /**
- * Imprime el caracter recibido de font_bitmap con formato y salta al siguiente espacio.
- * @param row fila del caracter en font_bitmap
- * @param col columna del caracter en font_bitmap
- * @param hexColor color en hexa 32b
+ * Imprime un caracter con formato y salta al siguiente espacio
+ * @param character caracter ASCII a imprimir
+ * @param hexColor color 0x00RRGGBB
  */
-void putCharCoordf(struct coordinates coord, uint32_t hexColor) {
-    for (int i = 0; i < CHARACTER_HEIGHT; i++) {
-        for (int j = 0; j < CHARACTER_WIDTH; j++) {
-            putPixel(hexColor & (font_bitmap[i + coord.row][j + coord.col] != 0 ? WHITE : BLACK),
-                     cursorX * CHARACTER_WIDTH + j, cursorY * CHARACTER_HEIGHT + i);
-        }
-    }
-    cursorX++;
-}
-
-/**
- * Mismo funcionamiento, imprime en blanco
- * @param row
- * @param col
- */
-void putCharCoord(struct coordinates coord){
-    putCharCoordf(coord, WHITE);
-}
-
-/**
- * Imprime un caracter con formato y salta de linea
- * @param character caracter a imprimir
- * @param hexColor formato
- */
-void putCharf(char character, uint32_t hexColor){
+void putCharc(char character, uint32_t hexColor){
     uint16_t width = VBE_mode_info->width;
-    if(character == '\n' || cursorX==width/CHARACTER_WIDTH){
+    if(character == '\n' || cursorX==WIDTH_IN_CHARS){
         newLine();
     }
     if(character == '\b'){
@@ -235,25 +257,36 @@ void putCharf(char character, uint32_t hexColor){
     }
     if(character != '\n' && character != '\b') { //alternativa: array de "nonprintable chars"
         struct coordinates coord = charToCoord(character);
-        putCharCoordf(coord, hexColor);
+        for (int i = 0; i < SCALED_CHARACTER_HEIGHT; i++) {
+            for (int j = 0; j < SCALED_CHARACTER_WIDTH; j++) {
+                putPixel(hexColor & (font_bitmap[i + coord.row][j + coord.col] != 0 ? WHITE : BLACK),
+                         cursorX * SCALED_CHARACTER_WIDTH + j, cursorY * SCALED_CHARACTER_HEIGHT + i);
+            }
+        }
+        cursorX++;
     }
 }
 
+/**
+ * Imprime un caracter en blanco y salta al siguiente espacio
+ * @param character caracter ASCII a imprimir
+ */
 void putChar(char character){
-    putCharf(character, WHITE);
+    putCharc(character, WHITE);
 }
 
 /*
- * Imprime string con color sin saltos
+ * Imprime string con color sin salto de linea
+ * @param string string a imprimir
+ * @param hexColor color 0x00RRGGBB
  */
 void printc(char * string, uint32_t hexColor){
     uint16_t width = VBE_mode_info->width;
-
     for(int i=0; string[i]!=0; i++){
-        if(cursorX==width/CHARACTER_WIDTH){
+        if(cursorX==WIDTH_IN_CHARS){
             newLine();
         }
-        putCharf(string[i], hexColor);
+        putCharc(string[i], hexColor);
     }
 }
 
@@ -261,27 +294,27 @@ void print(char * string){
     printc(string, WHITE);
 }
 
-/**
- * Imprime un string con formato
- * @param string
- * @param hexColor
+/*
+ * Imprime string con color con salto de linea
+ * @param string string a imprimir
+ * @param hexColor color 0x00RRGGBB
  */
-void putsf(char * string, uint32_t hexColor){
+void putsc(char * string, uint32_t hexColor){
     printc(string, hexColor);
     newLine();
 }
 
-/**
- * Imprime un string
- * @param string
+/*
+ * Imprime string en blanco con salto de linea
+ * @param string string a imprimir
  */
 void puts(char * string){
     char * aux = string;
-    putsf(aux, WHITE);
+    putsc(aux, WHITE);
 }
 
 /**
- * Imprime un caracter en una coordenada especifica de la pantalla. No avanza.
+ * Imprime un caracter en una coordenada especifica de la pantalla, no avanza el cursor
  * @param row
  * @param col
  * @param hexColor
@@ -289,8 +322,8 @@ void puts(char * string){
  * @param y
  */
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y){
-    for (int i=0; i<CHARACTER_HEIGHT; i++){
-        for(int j=0; j<CHARACTER_WIDTH; j++){
+    for (int i=0; i<SCALED_CHARACTER_HEIGHT; i++){
+        for(int j=0; j<SCALED_CHARACTER_WIDTH; j++){
             putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? WHITE: BLACK), x+j, y+i);
         }
     }

@@ -3,8 +3,12 @@ GLOBAL sysReadChar
 GLOBAL sysWriteColor
 GLOBAL sys_execve
 GLOBAL sys_time
+
 GLOBAL callNewLine
 GLOBAL callPutPixel
+
+GLOBAL excDiv0
+GLOBAL excInvalidOpCode
 
 section .text
 
@@ -44,3 +48,15 @@ callNewLine:
 
 callPutPixel:
     syscallManager 192
+
+; excepciones
+
+excDiv0:
+    mov rax, 1
+    mov rbx, 0
+    div rbx
+    ret
+
+excInvalidOpCode:
+    mov cr6, rax
+    ret

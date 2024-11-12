@@ -28,7 +28,7 @@ static const char * functions[]={ "exit", "help" };
 static const uint16_t functionCount = sizeof(functions);
 
 static uint8_t exit = 0;
-static uint8_t shutdown = 0;
+//static uint8_t shutdown = 0;
 
 void run(const char *);
 void shellLoop();
@@ -41,7 +41,7 @@ void shell(uint64_t argc, const char * argv[]){
 }
 
 void shellLoop(){
-    while(!exit && !shutdown){
+    while(!exit/* && !shutdown*/){
         printc("user@gordOS", LINUX_GREEN);
         printc("$ ", WHITE);
 
@@ -88,7 +88,7 @@ void run(const char * buffer){
     }
 
     switch(functionId){
-        case 0: //exit(); break;
+        case 0: exit=1; break; //exit()
         case 1: help(); break;
         default: //TODO: arrojar excepcion 6!!!!
     }
