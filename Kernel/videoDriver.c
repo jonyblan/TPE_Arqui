@@ -145,8 +145,36 @@ void newLine(){
         }
     }
      */
+    /*
+    uint16_t height = VBE_mode_info->height;
+    uint16_t width = VBE_mode_info->width;
+    if(cursorY == HEIGHT_IN_CHARS - 1){    //si solo queda una linea en blanco
+        //subo toda la pantalla una linea
+        for(int j=0; j<width; j++){
+            for(int i=0; i<height; i++){
+
+    }
+    */
+
+    uint16_t height = VBE_mode_info->height;
+    uint16_t width = VBE_mode_info->width;
     cursorX = 0;
-    cursorY++;
+    if (cursorY == HEIGHT_IN_CHARS - 1) cursorY++;
+    else {
+        // Pointer to framebuffer
+        void * dst = (void*) ((uint64_t) VBE_mode_info->framebuffer);
+        // Pointer to framebuffer + offset (one line down)
+        void * src = (void*) (dst + 3 * (WIDTH_IN_CHARS));
+        // Number of bytes to copy (multiplied by 3 because of RGB). Copies all but the first line
+        uint64_t len = 3 * (width * (height - SCALED_CHARACTER_HEIGHT));
+        // Copies len bytes of data from src to dst
+        memcpy(dst, src, len);
+        // Sets the rest to zero
+        memset(dst + len, 0, 3 * WIDTH_IN_CHARS);
+    }
+
+    //cursorX = 0;
+    //cursorY++;
 }
 
 void erase(){

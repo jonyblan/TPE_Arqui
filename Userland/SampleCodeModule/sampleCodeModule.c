@@ -58,7 +58,7 @@ void shellLoop(){
                     i--;
                     buffer[i]=0;
                     putChar(c);
-                } else {
+                } else if(c!='\b') { //para que no borre si no hay nada en buffer
                     buffer[i++] = c;
                     putChar(c);
                 }
