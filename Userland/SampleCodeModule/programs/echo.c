@@ -15,5 +15,5 @@ void echo(uint64_t argc, const char * argv[]){
         putChar(' ');
     }
     putChar('\n');
-    sys_exit(0);
+    //sys_exit(0);
 }

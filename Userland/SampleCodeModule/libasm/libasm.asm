@@ -53,6 +53,9 @@ callNewLine:
 callPutPixel:
     syscallManager 192
 
+callClear:
+    syscallManager 193
+
 ; excepciones
 
 excDiv0:

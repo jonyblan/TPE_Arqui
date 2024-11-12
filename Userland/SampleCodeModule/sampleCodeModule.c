@@ -38,7 +38,7 @@ void shell(uint64_t argc, const char * argv[]){
     printc("Shell initialized, welcome to gordOS\n", LINUX_BLUE);
     shellLoop();
     exit=0;
-    sys_exit(exit);
+    //sys_exit(exit);
 }
 
 void shellLoop(){
