@@ -1,3 +1,5 @@
+//TODO: parametros no implementados, borrar
+
 #include "arquilib.h"
 #include <stdint.h>
 #include "libasm.h"

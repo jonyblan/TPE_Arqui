@@ -53,6 +53,7 @@ int main()
 	load_idt();
     fillSyscalls();
 
+    /*
     char c = 0;
     while(1){
         c = getMsg();
@@ -64,6 +65,7 @@ int main()
             }
         }
     }
+     */
 
     clear();
 	((EntryPoint)sampleCodeModuleAddress)();

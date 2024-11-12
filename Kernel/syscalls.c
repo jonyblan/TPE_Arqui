@@ -11,11 +11,11 @@
 #define SYSCALL_COUNT 193
 //todo: cambiar el valor a medida que agregue syscalls
 
-static uint64_t sys_exit_impl(int32_t ret);
+static uint64_t sysExitImpl(int32_t ret);
 char sysReadCharImpl(uint32_t fileDesc);
 uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, uint32_t hexColor);
-static uint64_t sys_execve_impl(const char * progPath, uint64_t argc, char * const argv[]);
-static uint64_t sys_time_impl(int32_t * dest);
+//static uint64_t sys_execve_impl(const char * progPath, uint64_t argc, char * const argv[]);
+static uint64_t sysTimeImpl(int32_t * dest);
 
 void callNewLine();
 void callPutPixel(uint32_t hexColor, uint64_t x, uint64_t y);
@@ -24,11 +24,11 @@ typedef uint64_t (*Syscall)(uint64_t, uint64_t, uint64_t, uint64_t);
 static Syscall syscalls[SYSCALL_COUNT];
 
 void fillSyscalls(){
-    //syscalls[1] = (Syscall) sys_exit_impl;
+    syscalls[1] = (Syscall) sysExitImpl;
     syscalls[3] = (Syscall) sysReadCharImpl;
     syscalls[4] = (Syscall) sysWriteColorImpl;
     //syscalls[11] = (Syscall) sys_execve_impl;
-    syscalls[13] = (Syscall) sys_time_impl;
+    syscalls[13] = (Syscall) sysTimeImpl;
     syscalls[191] = (Syscall) callNewLine;
     syscalls[192] = (Syscall) callPutPixel;
 }
@@ -45,11 +45,9 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r1
     return 1;
 }
 
-/*
-static uint64_t sys_exit_impl(int32_t ret){
+static uint64_t sysExitImpl(int32_t ret){
     return sys_exit(ret);
 }
- */
 
 char sysReadCharImpl(uint32_t fileDesc){
     if(fileDesc != STANDARD_INPUT) { return 0; }

@@ -19,7 +19,7 @@ typedef struct {
 static const ProgramByName programs[] = {
         {"echo", (Program)echo}
 
-}; //todo: esto
+};
 static const uint64_t programCount = sizeof(programs);
  */
 
@@ -63,12 +63,15 @@ void shellLoop(){
                 }
             }
         }
+
         /* modelo de uso de putPixel TODO borrar
         for(int index=64; index<128; index++){
             putPixel(0x0000FF00, index, 64);
         }
          */
+
         run(buffer);
+
         //shellLoop(); //TODO no se si usarlo
     }
 }
