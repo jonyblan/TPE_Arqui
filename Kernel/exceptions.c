@@ -61,13 +61,13 @@ void printRegisters(){
 void exceptionDispatcher(int exception) {
     switch(exception) {
         case ZERO_EXCEPTION_ID:
-            putsf("Exception 0: Division by zero", BRIGHT_RED);
+            putsf("Exception 0: Division by zero", RED);
             break;
         case INVALID_OPCODE_ID:
-            putsf("Exception 6: Invalid operation code", BRIGHT_RED);
+            putsf("Exception 6: Invalid operation code", RED);
             break;
         default:
-            putsf("Uncontrolled exception", BRIGHT_RED);
+            putsf("Uncontrolled exception", RED);
     }
     printRegisters();
 }

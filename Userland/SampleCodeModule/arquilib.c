@@ -2,10 +2,6 @@
 #include "arquilib.h"
 #include "libasm.h"
 
-void putChar(const char c){
-    sysWrite(STANDARD_OUTPUT, &c, 1);
-}
-
 //TODO: imprimir caracter con color
 /*
 void putCharf(const char c, uint32_t hexColor){
@@ -21,8 +17,22 @@ uint64_t strlen(const char * string){
     return ret;
 }
 
+void printc(const char * string, uint32_t hexColor){
+    sysWriteColor(STANDARD_OUTPUT, string, strlen(string), hexColor);
+}
+
+void print(const char * string){
+    //sysWriteColor(STANDARD_OUTPUT, string, strlen(string), 0x00FFFFFF);
+    printc(string, WHITE);
+}
+
+void putChar(const char c){
+    //sysWriteColor(STANDARD_OUTPUT, &c, 1, 0x00FFFFFF);
+    printc(&c, WHITE);
+}
+
 void puts(const char * string){
-    sysWrite(STANDARD_OUTPUT, string, strlen(string));
+    print(string);
     callNewLine();
 }
 

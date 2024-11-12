@@ -1,6 +1,6 @@
 GLOBAL sys_exit
 GLOBAL sysReadChar
-GLOBAL sysWrite
+GLOBAL sysWriteColor
 GLOBAL sys_execve
 GLOBAL sys_time
 GLOBAL callNewLine
@@ -28,7 +28,7 @@ sys_exit:
 sysReadChar:
     syscallManager 3
 
-sysWrite:
+sysWriteColor:
     syscallManager 4
 
 sys_execve:

@@ -58,21 +58,64 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
  * Fin del contenido proporcionado por la cátedra
 */
 
-static uint64_t cursorX = 0;
-static uint64_t cursorY = 0;
+static uint8_t cursorX = 0;
+static uint8_t cursorY = 0;
 
 struct coordinates{
     uint8_t row;
     uint8_t col;
 };
 
+uint32_t getPixel(uint64_t x, uint64_t y){
+    //Basado en putPixel, funcion de la catedra
+    uint8_t * framebuffer = (uint8_t *) VBE_mode_info->framebuffer;
+    uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
+    uint32_t toReturn;
+    toReturn |= framebuffer[offset];
+    toReturn |= framebuffer[offset+1] << 8;
+    toReturn |= framebuffer[offset+2] << 16;
+    return toReturn;
+}
+
 /**
  * Salta una linea y vuelve al principio de linea
  */
 void newLine(){
+    /*
+     * //TODO: si me quedo sin espacio en pantalla, mover todo hacia arriba
+    uint16_t width = VBE_mode_info->width;
+    uint16_t height = VBE_mode_info->height;
+    if(cursorY == height/CHARACTER_HEIGHT - 1){
+        for(int i=0; i<width; i++){
+            for(int j=0; j<height-CHARACTER_HEIGHT; j++){
+                putPixel(getPixel(i+CHARACTER_HEIGHT, j+CHARACTER_HEIGHT), i, j);
+            }
+        }
+        for(int k=0; k<width; k++){
+            for(int l=0; l=(int)CHARACTER_HEIGHT; l++){
+                putPixel(BLACK, k, l);
+            }
+        }
+    }
+     */
     cursorX = 0;
     cursorY++;
+}
 
+void erase(){
+    //TODO: si se borra el ultimo caracter de la linea, sigue estando la linea al hacer enter
+    uint16_t width = VBE_mode_info->width;
+    //static uint8_t base = cursorY; con cursorY>base
+    if(cursorX==0 && cursorY>0){
+        cursorY--;
+        cursorX=width/CHARACTER_WIDTH;
+    }
+    cursorX--;
+    for (int i = 0; i < CHARACTER_HEIGHT; i++) {
+        for (int j = 0; j < CHARACTER_WIDTH; j++) {
+            putPixel(BLACK,cursorX * CHARACTER_WIDTH + j, cursorY * CHARACTER_HEIGHT + i);
+        }
+    }
 }
 
 /**
@@ -158,19 +201,14 @@ struct coordinates charToCoord(char character){
  * @param col columna del caracter en font_bitmap
  * @param hexColor color en hexa 32b
  */
-void putCharCoordf(struct coordinates coord, uint32_t hexColor){
-    //uint16_t width = VBE_mode_info->width;
-    //if(coord.row == 5 && coord.col == 15 || cursorX==width/CHARACTER_WIDTH ){
-        //newLine();
-    //} else {
-        for (int i = 0; i < CHARACTER_HEIGHT; i++) {
-            for (int j = 0; j < CHARACTER_WIDTH; j++) {
-                putPixel(hexColor & (font_bitmap[i + coord.row][j + coord.col] != 0 ? 0x00FFFFFF : 0x00000000),
-                         cursorX * CHARACTER_WIDTH + j, cursorY * CHARACTER_HEIGHT + i);
-            }
+void putCharCoordf(struct coordinates coord, uint32_t hexColor) {
+    for (int i = 0; i < CHARACTER_HEIGHT; i++) {
+        for (int j = 0; j < CHARACTER_WIDTH; j++) {
+            putPixel(hexColor & (font_bitmap[i + coord.row][j + coord.col] != 0 ? WHITE : BLACK),
+                     cursorX * CHARACTER_WIDTH + j, cursorY * CHARACTER_HEIGHT + i);
         }
-        cursorX++;
-    //}
+    }
+    cursorX++;
 }
 
 /**
@@ -179,7 +217,7 @@ void putCharCoordf(struct coordinates coord, uint32_t hexColor){
  * @param col
  */
 void putCharCoord(struct coordinates coord){
-    putCharCoordf(coord, 0x00FFFFFF);
+    putCharCoordf(coord, WHITE);
 }
 
 /**
@@ -192,6 +230,9 @@ void putCharf(char character, uint32_t hexColor){
     if(character == '\n' || cursorX==width/CHARACTER_WIDTH){
         newLine();
     }
+    if(character == '\b'){
+        erase();
+    }
     if(character != '\n' && character != '\b') { //alternativa: array de "nonprintable chars"
         struct coordinates coord = charToCoord(character);
         putCharCoordf(coord, hexColor);
@@ -199,7 +240,7 @@ void putCharf(char character, uint32_t hexColor){
 }
 
 void putChar(char character){
-    putCharf(character, 0x00FFFFFF);
+    putCharf(character, WHITE);
 }
 
 /*
@@ -217,7 +258,7 @@ void printc(char * string, uint32_t hexColor){
 }
 
 void print(char * string){
-    printc(string, 0x00FFFFFF);
+    printc(string, WHITE);
 }
 
 /**
@@ -236,7 +277,7 @@ void putsf(char * string, uint32_t hexColor){
  */
 void puts(char * string){
     char * aux = string;
-    putsf(aux, 0x00FFFFFF);
+    putsf(aux, WHITE);
 }
 
 /**
@@ -250,7 +291,7 @@ void puts(char * string){
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y){
     for (int i=0; i<CHARACTER_HEIGHT; i++){
         for(int j=0; j<CHARACTER_WIDTH; j++){
-            putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? 0x00FFFFFF: 0x00000000), x+j, y+i);
+            putPixel(hexColor & (font_bitmap[i+row][j+col] != 0 ? WHITE: BLACK), x+j, y+i);
         }
     }
 }
@@ -261,7 +302,7 @@ void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint
 void clear(){
     for(int i=0; i<VBE_mode_info->width; i++){
         for(int j=0; j<VBE_mode_info->height; j++){
-            putPixel(0x00000000, i, j);
+            putPixel(BLACK, i, j);
         }
     }
     cursorX=0;

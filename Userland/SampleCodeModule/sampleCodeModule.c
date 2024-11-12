@@ -5,8 +5,10 @@
 #include "programs.h"
 
 #define TEMP_BUFFER_SIZE 256
-#define TEMP_MAX_PARAM 16
+#define TEMP_MAX_PARAM 5
 
+/*
+ * TODO: parametros
 typedef uint64_t (*Program)(uint64_t, const char * []);
 
 typedef struct {
@@ -19,15 +21,20 @@ static const ProgramByName programs[] = {
 
 }; //todo: esto
 static const uint64_t programCount = sizeof(programs);
+ */
+
+static const char * functions[]={ "exit", "help" };
+
+static const uint16_t functionCount = sizeof(functions);
 
 static uint8_t exit = 0;
 static uint8_t shutdown = 0;
 
-void run(const char *, uint64_t);
+void run(const char *);
 void shellLoop();
 
 void shell(uint64_t argc, const char * argv[]){
-    puts("Bienvenido");
+    printc("Shell initialized, welcome to gordOS\n", LINUX_BLUE);
     shellLoop();
     exit=0;
     sys_exit(exit);
@@ -35,51 +42,72 @@ void shell(uint64_t argc, const char * argv[]){
 
 void shellLoop(){
     while(!exit && !shutdown){
-        puts("shell");
+        printc("user@gordOS", LINUX_GREEN);
+        printc("$ ", WHITE);
 
         uint64_t i = 0;
         char buffer[TEMP_BUFFER_SIZE] = {0};
         char c = 0;
 
         while((c=getChar())!='\n' && c >= 0 && i + 1 < TEMP_BUFFER_SIZE){
-            //puts("loop");
-            //TODO: borrar
+
             //TODO: fin del buffer
             if(c!=0) {
                 if(c == '\b' && i > 0){
-                    puts("borrar");
-                    //todo: borrar (buffer[i] = 0, decrementar i, borrar el caracter (se puede imprimir \b)
+                    i--;
+                    buffer[i]=0;
+                    putChar(c);
                 } else {
-                    //puts("buffer");
                     buffer[i++] = c;
                     putChar(c);
                 }
             }
         }
-        //putChar('\n');    //comentado porque imprime el enter que escribe el usuario
-        /* modelo de uso de putPixel
+        /* modelo de uso de putPixel TODO borrar
         for(int index=64; index<128; index++){
             putPixel(0x0000FF00, index, 64);
         }
          */
-        run(buffer, i);
+        run(buffer);
+        //shellLoop(); //TODO no se si usarlo
     }
 }
 
-void run(const char * buffer, uint64_t bufferLength){
-    puts("run");
-    char prog[TEMP_BUFFER_SIZE];
-    char progArgv[TEMP_MAX_PARAM][TEMP_BUFFER_SIZE];
+void run(const char * buffer){
+
+    uint8_t functionId = 0;
+    char found = 0;
+    for(uint8_t i=0; i<functionCount && !found; i++){
+        if(strcmp(buffer, functions[i]) == 0){
+            found = 1;
+            functionId = i;
+        }
+    }
+
+    switch(functionId){
+        case 0: //exit(); break;
+        case 1: help(); break;
+        default: //TODO: arrojar excepcion 6!!!!
+    }
+
+    /*
+    char prog[TEMP_BUFFER_SIZE] = {0};
+    char progArgv[TEMP_MAX_PARAM][TEMP_BUFFER_SIZE] = {0};
     uint8_t spaceCount = 0;
-    uint64_t j=0;
+    uint64_t argvIndex=0;
     for(uint64_t i=0; i<bufferLength; i++){
         if(buffer[i]!=' '){
             if(spaceCount==0){
                 prog[i]=buffer[i];
             } else {
-                progArgv[spaceCount-1][j++]=buffer[i];
+                progArgv[spaceCount-1][argvIndex++]=buffer[i];
             }
         } else {
+            if(spaceCount==0){
+                prog[i] = 0;
+            } else {
+                progArgv[spaceCount-1][argvIndex] = 0;
+            }
             spaceCount++;
             //todo: no chequea doble espacio
         }
@@ -95,4 +123,5 @@ void run(const char * buffer, uint64_t bufferLength){
     if(found == 0){
         //todo: tirar exc 6
     }
+     */
 }

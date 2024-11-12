@@ -13,7 +13,7 @@
 
 static uint64_t sys_exit_impl(int32_t ret);
 char sysReadCharImpl(uint32_t fileDesc);
-uint64_t sysWriteImpl(uint32_t fileDesc, const char* source, uint64_t len);
+uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, uint32_t hexColor);
 static uint64_t sys_execve_impl(const char * progPath, uint64_t argc, char * const argv[]);
 static uint64_t sys_time_impl(int32_t * dest);
 
@@ -26,7 +26,7 @@ static Syscall syscalls[SYSCALL_COUNT];
 void fillSyscalls(){
     //syscalls[1] = (Syscall) sys_exit_impl;
     syscalls[3] = (Syscall) sysReadCharImpl;
-    syscalls[4] = (Syscall) sysWriteImpl;
+    syscalls[4] = (Syscall) sysWriteColorImpl;
     //syscalls[11] = (Syscall) sys_execve_impl;
     syscalls[13] = (Syscall) sys_time_impl;
     syscalls[191] = (Syscall) callNewLine;
@@ -63,9 +63,9 @@ char sysReadCharImpl(uint32_t fileDesc){
     return getMsg();
 }
 
-uint64_t sysWriteImpl(uint32_t fileDesc, const char* source, uint64_t len){
+uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, uint32_t hexColor){
     if(fileDesc != STANDARD_OUTPUT) {return -1;}
-    print(source);
+    printc(source, hexColor);
     return len;
 }
 
