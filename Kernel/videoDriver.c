@@ -375,10 +375,12 @@ void itoa(long num, char * string){
     }
     string[i] = '\0';
 
+    i--;
     uint8_t j = 0;
     while(j < i){
         char aux = string[j];
-        toReturn[j] = string[i];
+        string[j] = string[i];
+        string[i] = aux;
         i--;
         j++;
     }

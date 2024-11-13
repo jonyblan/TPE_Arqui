@@ -16,7 +16,7 @@ void printRegisters(uint64_t regs[18]){
 	print("\trbx: ");
     itoa(regs[1], buffer);
 	printc(buffer, TURQUOISE);
-	print("\trcx: ");
+	print("\nrcx: ");
 	itoa(regs[2], buffer);
 	printc(buffer, TURQUOISE);
 	print("\trdx: ");
@@ -34,7 +34,7 @@ void printRegisters(uint64_t regs[18]){
 	print("\tcs: ");
 	itoa(regs[7], buffer);
 	printc(buffer, TURQUOISE);
-	print("\tr8: ");
+	print("\nr8: ");
 	itoa(regs[8], buffer);
 	printc(buffer, TURQUOISE);
 	print("\tr9: ");
@@ -55,7 +55,7 @@ void printRegisters(uint64_t regs[18]){
 	print("\tr14: ");
 	itoa(regs[15], buffer);
 	printc(buffer, TURQUOISE);
-	print("\tr15: ");
+	print("\nr15: ");
 	itoa(regs[16], buffer);
 	printc(buffer, TURQUOISE);
 	print("\trflags: ");
