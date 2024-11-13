@@ -18,7 +18,7 @@ void setScale(uint8_t newScale);
 void upscale();
 void downscale();
 void setCursor(uint8_t x, uint8_t y);
-uint32_t getPixel(uint8_t x, uint8_t y);
+uint32_t getPixel(uint64_t x, uint64_t y);
 void newLine();
 void erase();
 void putCharc(char character, uint32_t hexColor);

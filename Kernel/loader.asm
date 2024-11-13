@@ -1,6 +1,8 @@
 global loader
+global resetMain
 extern main
 extern initializeKernelBinary
+extern getStackBase
 
 loader:
 	call initializeKernelBinary	; Set up the kernel binary, and get thet stack address
@@ -10,3 +12,6 @@ hang:
 	cli
 	hlt	; halt machine should kernel return
 	jmp hang
+
+resetMain:
+    call getStackBase
