@@ -2,7 +2,7 @@ global loader
 global resetMain
 extern main
 extern initializeKernelBinary
-extern getStackBase
+extern main
 
 loader:
 	call initializeKernelBinary	; Set up the kernel binary, and get thet stack address
@@ -14,4 +14,4 @@ hang:
 	jmp hang
 
 resetMain:
-    call getStackBase
+    call main

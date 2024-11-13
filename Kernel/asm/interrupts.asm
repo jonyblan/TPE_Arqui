@@ -78,7 +78,29 @@ SECTION .text
 %macro exceptionHandler 1
 	pushState
 
+    mov [regs + 8], rax
+    mov rax, [rsp]      ;rip
+    mov [regs], rax
+    mov [regs + 16], rbx
+    mov [regs + 24], rcx
+    mov [regs + 32], rdx
+    mov [regs + 40], rsi
+    mov [regs + 48], rdi
+    mov [regs + 56], rbp
+    mov rax, [rsp + 24] ;cs
+    mov [regs + 64], rax
+    mov [regs + 72], r8
+    mov [regs + 80], r9
+    mov [regs + 88], r10
+    mov [regs + 96], r11
+    mov [regs + 104], r12
+    mov [regs + 112], r13
+    mov [regs + 120], r14
+    mov [regs + 128], r15
+    mov rax, [rsp + 16] ;flags
+    mov [regs + 136], rax
 	mov rdi, %1 ; pasaje de parametro
+	mov rsi, regs ; array de registros
 	call exceptionDispatcher
 
 	popState
@@ -170,3 +192,4 @@ haltcpu:
 
 SECTION .bss
 	aux resq 1
+    regs resq 18
