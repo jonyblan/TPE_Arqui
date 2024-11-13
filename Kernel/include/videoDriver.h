@@ -14,13 +14,22 @@ enum Colors { WHITE=0x00FFFFFF, BLACK=0x00000000, RED=0x00FF0000, GREEN=0x0000FF
         LINUX_GREEN=0x0016C60C, LINUX_BLUE=0x002668FF};
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
+void setScale(uint8_t newScale);
+void upscale();
+void downscale();
+void setCursor(uint8_t x, uint8_t y);
+uint32_t getPixel(uint8_t x, uint8_t y);
 void newLine();
-void putCharf(char character, uint32_t hexColor);
+void erase();
+void putCharc(char character, uint32_t hexColor);
 void putChar(char character);
-void putsf(char * string, uint32_t hexColor);
+void printc(char * string, uint32_t hexColor);
+void print(char * string);
+void putsc(char * string, uint32_t hexColor);
 void puts(char * string);
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
 void clear();
+char * itoa(uint32_t num);
 
 /**
  * bitmap

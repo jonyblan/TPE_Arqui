@@ -252,21 +252,29 @@ struct coordinates charToCoord(char character){
  * @param hexColor color 0x00RRGGBB
  */
 void putCharc(char character, uint32_t hexColor){
-    if(character == '\n' || cursorX==WIDTH_IN_CHARS){
+    if(cursorX==WIDTH_IN_CHARS){
         newLine();
     }
-    if(character == '\b'){
-        erase();
-    }
-    if(character != '\n' && character != '\b') { //alternativa: array de "nonprintable chars"
-        struct coordinates coord = charToCoord(character);
-        for (int i = 0; i < SCALED_CHARACTER_HEIGHT; i++) {
-            for (int j = 0; j < SCALED_CHARACTER_WIDTH; j++) {
-                putPixel(hexColor & (font_bitmap[i/scale + coord.row][j/scale + coord.col] != 0 ? WHITE : BLACK),
+
+    switch(character){
+        case '\n':
+            newLine();
+            break;
+        case '\b':
+            erase();
+            break;
+        case '\t':
+            print("    ");
+            break;
+        default:
+            struct coordinates coord = charToCoord(character);
+            for (int i = 0; i < SCALED_CHARACTER_HEIGHT; i++) {
+                for (int j = 0; j < SCALED_CHARACTER_WIDTH; j++) {
+                    putPixel(hexColor & (font_bitmap[i/scale + coord.row][j/scale + coord.col] != 0 ? WHITE : BLACK),
                          cursorX * SCALED_CHARACTER_WIDTH + j, cursorY * SCALED_CHARACTER_HEIGHT + i);
+                }
             }
-        }
-        cursorX++;
+            cursorX++;
     }
 }
 
@@ -343,4 +351,38 @@ void clear(){
     }
     cursorX=0;
     cursorY=0;
+}
+
+char * itoa(uint32_t num){
+    char * toReturn;
+    char isneg = 0;
+    uint8_t i = 0;
+
+    if(num==0){
+        toReturn[i++] = '0';
+        toReturn[i] = '\0';
+        return toReturn;
+    }
+    if(num<0){
+        num-=num;
+        isneg = 1;
+    }
+    while(num != 0){
+        toReturn[i++] = (num % 10) + '0';
+        num /= 10;
+    }
+    if(isneg){
+        toReturn[i++] = '-';
+    }
+    toReturn[i] = '\0';
+
+    uint8_t j = 0;
+    while(j < i){
+        char aux = toReturn[j];
+        toReturn[j] = toReturn[i];
+        i--;
+        j++;
+    }
+
+    return toReturn;
 }
