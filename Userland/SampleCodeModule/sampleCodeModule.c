@@ -24,7 +24,7 @@ static const ProgramByName programs[] = {
 static const uint64_t programCount = sizeof(programs);
  */
 
-static const char * functions[]={ "exit", "help", "clear" };
+static const char * functions[]={ "exit", "help", "clear", "div0", "invopcode" };
 
 static const uint16_t functionCount = sizeof(functions);
 
@@ -92,6 +92,8 @@ void run(const char * buffer){
         //case 0: exit=1; break; //exit()
         case 1: help(); break;
         case 2: clear(); break;
+        case 3: excDiv0(); break;
+        case 4: excInvalidOpCode(); break;
         default: //TODO: arrojar excepcion 6!!!!
     }
 

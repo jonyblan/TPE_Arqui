@@ -24,4 +24,9 @@ void callUpscale();
 void callDownscale();
 void callSetCursor(uint8_t x, uint8_t y);
 */
+
+//Excepciones
+extern void excInvalidOpCode();
+extern void excDiv0();
+
 #endif
