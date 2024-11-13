@@ -4,11 +4,8 @@
  * Muestra los comandos disponibles y una breve descripcion de ellos
  */
 void help(){
-
-    puts("echo: Imprime lo recibido por entrada estandar");
-    putChar('\n');
-
-    puts("time: Imprime la hora del sistema");
-    putChar('\n');
-
+    printc("clear: limpia la pantalla\n", ORANGE);
+    printc("div0: causa una interrupcion de division por 0\n", ORANGE);
+    printc("invopcode: causa una interrupcion de Invalid Operation Code\n", ORANGE);
+    printc("printregs: imprime los valores actuales de los registros del procesador\n", ORANGE);
 }

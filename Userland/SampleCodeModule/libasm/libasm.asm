@@ -10,6 +10,7 @@ GLOBAL callClear
 ;GLOBAL callUpscale
 ;GLOBAL callDownscale
 ;GLOBAL callSetCursor
+GLOBAL callPrintRegs
 
 GLOBAL excDiv0
 GLOBAL excInvalidOpCode

@@ -9,7 +9,7 @@
 #define STANDARD_INPUT 0
 #define STANDARD_OUTPUT 1
 
-#define SYSCALL_COUNT 194
+#define SYSCALL_COUNT 195
 //todo: cambiar el valor a medida que agregue syscalls
 
 static uint64_t sys_exit_impl(int32_t ret);
@@ -97,5 +97,6 @@ void callClear(){
 }
 
 void callPrintRegs(){
-    printRegisters();
+    //solucion simple pero algo fea
+    _printRegisters();
 }

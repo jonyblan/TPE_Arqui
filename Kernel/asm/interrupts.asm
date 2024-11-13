@@ -16,6 +16,7 @@ GLOBAL _irq80Handler
 
 GLOBAL _exception0Handler   ;div por 0
 GLOBAL _exception6Handler   ; invalid opcode
+GLOBAL _printRegisters
 
 EXTERN irqDispatcher
 EXTERN syscallDispatcher
@@ -182,6 +183,10 @@ _exception0Handler:
 ;Invalid Opcode Exception
 _exception6Handler:
     exceptionHandler 6
+
+;Use exceptionHandler to print registers when desired
+_printRegisters:
+    exceptionHandler 1
 
 haltcpu:
 	cli

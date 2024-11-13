@@ -3,6 +3,7 @@
 
 #define ZERO_EXCEPTION_ID 0
 #define INVALID_OPCODE_ID 6
+#define PRINT_REGISTERS_ID 1
 
 void printRegisters(uint64_t regs[18]){
 	char buffer[10];
@@ -65,6 +66,8 @@ void printRegisters(uint64_t regs[18]){
 
 void exceptionDispatcher(uint64_t exception, uint64_t regs[18]) {
     switch(exception) {
+        case PRINT_REGISTERS_ID:
+            break;
         case ZERO_EXCEPTION_ID:
             putsc("\nException 0: Division by zero", RED);
             break;
