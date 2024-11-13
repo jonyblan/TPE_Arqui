@@ -29,7 +29,7 @@ void putsc(char * string, uint32_t hexColor);
 void puts(char * string);
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
 void clear();
-char * itoa(uint32_t num);
+void itoa(long num, char * string);
 
 /**
  * bitmap

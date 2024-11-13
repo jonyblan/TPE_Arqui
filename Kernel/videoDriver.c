@@ -353,36 +353,33 @@ void clear(){
     cursorY=0;
 }
 
-char * itoa(uint32_t num){
-    char * toReturn;
+void itoa(long num, char * string){
     char isneg = 0;
     uint8_t i = 0;
 
     if(num==0){
-        toReturn[i++] = '0';
-        toReturn[i] = '\0';
-        return toReturn;
+        string[i++] = '0';
+        string[i] = '\0';
+        return;
     }
     if(num<0){
         num-=num;
         isneg = 1;
     }
     while(num != 0){
-        toReturn[i++] = (num % 10) + '0';
+        string[i++] = (num % 10) + '0';
         num /= 10;
     }
     if(isneg){
-        toReturn[i++] = '-';
+        string[i++] = '-';
     }
-    toReturn[i] = '\0';
+    string[i] = '\0';
 
     uint8_t j = 0;
     while(j < i){
-        char aux = toReturn[j];
-        toReturn[j] = toReturn[i];
+        char aux = string[j];
+        toReturn[j] = string[i];
         i--;
         j++;
     }
-
-    return toReturn;
 }

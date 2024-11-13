@@ -5,44 +5,62 @@
 #define INVALID_OPCODE_ID 6
 
 void printRegisters(uint64_t regs[18]){
-
+	char buffer[10];
 	puts("Registers values:");
 	print("rip: ");
-	printc(itoa(regs[0]), TURQUOISE);
+    itoa(regs[0], buffer);
+	printc(buffer, TURQUOISE);
 	print("\trax: ");
-	printc(itoa(regs[1]), TURQUOISE);
+    itoa(regs[0], buffer);
+	printc(buffer, TURQUOISE);
 	print("\trbx: ");
-	printc(itoa(regs[2]), TURQUOISE);
+    itoa(regs[1], buffer);
+	printc(buffer, TURQUOISE);
 	print("\trcx: ");
-	printc(itoa(regs[3]), TURQUOISE);
+	itoa(regs[2], buffer);
+	printc(buffer, TURQUOISE);
 	print("\trdx: ");
-	printc(itoa(regs[4]), TURQUOISE);
+	itoa(regs[3], buffer);
+	printc(buffer, TURQUOISE);
 	print("\trsi: ");
-	printc(itoa(regs[5]), TURQUOISE);
+	itoa(regs[4], buffer);
+	printc(buffer, TURQUOISE);
 	print("\nrdi: ");
-	printc(itoa(regs[6]), TURQUOISE);
+	itoa(regs[5], buffer);
+	printc(buffer, TURQUOISE);
 	print("\trbp: ");
-	printc(itoa(regs[7]), TURQUOISE);
+	itoa(regs[6], buffer);
+	printc(buffer, TURQUOISE);
 	print("\tcs: ");
-	printc(itoa(regs[8]), TURQUOISE);
+	itoa(regs[7], buffer);
+	printc(buffer, TURQUOISE);
 	print("\tr8: ");
-	printc(itoa(regs[9]), TURQUOISE);
+	itoa(regs[8], buffer);
+	printc(buffer, TURQUOISE);
 	print("\tr9: ");
-	printc(itoa(regs[10]), TURQUOISE);
-	print("\tr10");
-	printc(itoa(regs[11]), TURQUOISE);
+	itoa(regs[9], buffer);
+	printc(buffer, TURQUOISE);
+	print("\tr10: ");
+	itoa(regs[10], buffer);
+	printc(buffer, TURQUOISE);
 	print("\nr11: ");
-	printc(itoa(regs[12]), TURQUOISE);
+	itoa(regs[11], buffer);
+	printc(buffer, TURQUOISE);
 	print("\tr12: ");
-	printc(itoa(regs[13]), TURQUOISE);
+	itoa(regs[12], buffer);
+	printc(buffer, TURQUOISE);
 	print("\tr13: ");
-	printc(itoa(regs[14]), TURQUOISE);
+	itoa(regs[13], buffer);
+	printc(buffer, TURQUOISE);
 	print("\tr14: ");
-	printc(itoa(regs[15]), TURQUOISE);
+	itoa(regs[15], buffer);
+	printc(buffer, TURQUOISE);
 	print("\tr15: ");
-	printc(itoa(regs[16]), TURQUOISE);
+	itoa(regs[16], buffer);
+	printc(buffer, TURQUOISE);
 	print("\trflags: ");
-	printc(itoa(regs[17]), TURQUOISE);
+	itoa(regs[17], buffer);
+	printc(buffer, TURQUOISE);
 }
 
 void exceptionDispatcher(uint64_t exception, uint64_t regs[18]) {
