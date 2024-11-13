@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "programs.h"
 #include "utillib.h"
+#include "libasm.h"
 
 #define TEMP_BUFFER_SIZE 256
 #define TEMP_MAX_PARAM 5
@@ -24,7 +25,7 @@ static const ProgramByName programs[] = {
 static const uint64_t programCount = sizeof(programs);
  */
 
-static const char * functions[]={ "exit", "help", "clear", "div0", "invopcode" };
+static const char * functions[]={ "exit", "help", "clear", "div0", "invopcode", "printregs" };
 
 static const uint16_t functionCount = sizeof(functions);
 
@@ -94,6 +95,7 @@ void run(const char * buffer){
         case 2: clear(); break;
         case 3: excDiv0(); break;
         case 4: excInvalidOpCode(); break;
+        case 5: callPrintRegs(); break;
         default: //TODO: arrojar excepcion 6!!!!
     }
 

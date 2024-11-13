@@ -56,6 +56,9 @@ callPutPixel:
 callClear:
     syscallManager 193
 
+callPrintRegs:
+    syscallManager 194
+
 ; excepciones
 
 excDiv0:

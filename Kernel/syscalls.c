@@ -4,6 +4,7 @@
 #include "time.h"
 #include "interrupts.h"
 #include "syscalls.h"
+#include "exceptions.h"
 
 #define STANDARD_INPUT 0
 #define STANDARD_OUTPUT 1
@@ -20,6 +21,7 @@ static uint64_t sysTimeImpl(int32_t * dest);
 void callNewLine();
 void callPutPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void callClear();
+void callPrintRegs();
 
 typedef uint64_t (*Syscall)(uint64_t, uint64_t, uint64_t, uint64_t);
 static Syscall syscalls[SYSCALL_COUNT];
@@ -33,6 +35,7 @@ void fillSyscalls(){
     syscalls[191] = (Syscall) callNewLine;
     syscalls[192] = (Syscall) callPutPixel;
     syscalls[193] = (Syscall) callClear;
+    syscalls[194] = (Syscall) callPrintRegs;
 }
 
 //los registros como parametros de C son del orden:
@@ -91,4 +94,8 @@ void callPutPixel(uint32_t hexColor, uint64_t x, uint64_t y){
 
 void callClear(){
     clear();
+}
+
+void callPrintRegs(){
+    printRegisters();
 }

@@ -24,6 +24,7 @@ void callUpscale();
 void callDownscale();
 void callSetCursor(uint8_t x, uint8_t y);
 */
+void callPrintRegs();
 
 //Excepciones
 extern void excInvalidOpCode();
