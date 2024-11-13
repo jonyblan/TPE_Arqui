@@ -125,47 +125,38 @@ uint32_t getPixel(uint64_t x, uint64_t y){
 }
 
 /**
- * Salta una linea y vuelve al principio de linea
+ * Salta una linea y vuelve al principio de linea. Si se termina la pantalla, scrollea
  */
 void newLine(){
-    /*
-     * //TODO: si me quedo sin espacio en pantalla, mover todo hacia arriba
-    uint16_t width = VBE_mode_info->width;
-    uint16_t height = VBE_mode_info->height;
-    if(cursorY == height/SCALED_CHARACTER_HEIGHT - 1){
-        for(int i=0; i<width; i++){
-            for(int j=0; j<height-SCALED_CHARACTER_HEIGHT; j++){
-                putPixel(getPixel(i+SCALED_CHARACTER_HEIGHT, j+SCALED_CHARACTER_HEIGHT), i, j);
-            }
-        }
-        for(int k=0; k<width; k++){
-            for(int l=0; l=(int)SCALED_CHARACTER_HEIGHT; l++){
-                putPixel(BLACK, k, l);
-            }
-        }
-    }
-     */
-
-    uint16_t height = VBE_mode_info->height;
-    uint16_t width = VBE_mode_info->width;
-    if(cursorY == HEIGHT_IN_CHARS - 1){    //si solo queda una linea en blanco
-        //subo toda la pantalla una linea
-        for(int j=0; j<height-(int)SCALED_CHARACTER_HEIGHT; j++){
-            for(int i=0; i<width; i++){
-                putPixel(getPixel(i, j+16), i, j);
-            }
-        }
-    } else {
-        cursorY++;
-    }
     cursorX = 0;
-    //cursorY++;
+    if(cursorY < HEIGHT_IN_CHARS-2) {
+        cursorY++;          //avanzo normalmente, sigo teniendo pantalla
+    } else {                //si llegue a la anteultima linea
+        //como la pantalla esta en memoria, voy a copiar a partir de la segunda linea y pegarlo todo de vuelta
+        //en el framebuffer. luego limpio la ultima linea para volver a escribir
+        uint32_t framebuffer = VBE_mode_info->framebuffer;
+        uint16_t height = VBE_mode_info->height;
+        uint16_t pitch = VBE_mode_info->pitch;
+        /*
+         * memcpy(destino, origen, bytes)
+         * destino: framebuffer (inicio de la pantalla)
+         * origen: segunda linea de la pantalla (pitch es bytes por linea de pixeles)
+         * bytes: toda la pantalla menos las ultimas dos lineas
+        */
+        memcpy(framebuffer,
+               framebuffer + pitch * SCALED_CHARACTER_HEIGHT,
+               pitch * (height - SCALED_CHARACTER_HEIGHT*2));
+        /*
+         * memset(destino, valor, bytes)
+         * destino: anteultima linea
+         * bytes: toda la linea
+         */
+        memset(framebuffer + pitch * (height - SCALED_CHARACTER_HEIGHT*2), 0, pitch * SCALED_CHARACTER_HEIGHT);
+    }
 }
 
 void erase(){
-    //TODO: si se borra el ultimo caracter de la linea, sigue estando la linea al hacer enter
     uint16_t width = VBE_mode_info->width;
-    //static uint8_t base = cursorY; con cursorY>base
     if(cursorX==0 && cursorY>0){
         cursorY--;
         cursorX=WIDTH_IN_CHARS;
@@ -261,7 +252,6 @@ struct coordinates charToCoord(char character){
  * @param hexColor color 0x00RRGGBB
  */
 void putCharc(char character, uint32_t hexColor){
-    uint16_t width = VBE_mode_info->width;
     if(character == '\n' || cursorX==WIDTH_IN_CHARS){
         newLine();
     }
