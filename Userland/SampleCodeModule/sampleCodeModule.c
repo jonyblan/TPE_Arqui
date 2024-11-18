@@ -25,8 +25,8 @@ static const ProgramByName programs[] = {
 static const uint64_t programCount = sizeof(programs);
  */
 
-static const char * functions[]={ "exit", "help", "clear", "div0", "invopcode", "printregs",
-                                  "snake"/*, "snake2"*/ };
+static const char * functions[]={ "exit", "help", "clear", "scale", "div0", "invopcode", 
+                                  "printregs", "time", "snake"/*, "snake2"*/ };
 
 static const uint16_t functionCount = sizeof(functions);
 
@@ -83,23 +83,30 @@ void run(const char * buffer){
 
     uint8_t functionId = 0;
     char found = 0;
+    char * function = 0;
+    strcpyUntil(function, buffer, ' ');
     for(uint8_t i=0; i<functionCount && !found; i++){
-        if(strcmp(buffer, functions[i]) == 0){
+        if(strcmp(function, functions[i]) == 0){
             found = 1;
             functionId = i;
         }
     }
 
+    char * argv = 0;
+    strcpyFrom(argv, buffer, ' ');
+
     switch(functionId){
         //case 0: exit=1; break; //exit()
         case 1: help(); break;
         case 2: clear(); break;
-        case 3: excDiv0(); break;
-        case 4: excInvalidOpCode(); break;
-        case 5: callPrintRegs(); break;
-        case 6: snake(); break;
-        //case 7: snake2(); break;
-        default: printc("Command not found", RED);//TODO: arrojar excepcion 6!!!!
+        case 3: scale(argv); break;
+        case 4: excDiv0(); break;
+        case 5: excInvalidOpCode(); break;
+        case 6: callPrintRegs(); break;
+        case 7: callPrintSystemTime(); break;
+        case 8: snake(); break;
+        //case 9: snake2(); break;
+        default: printc("Command not found\n", RED);//TODO: arrojar excepcion 6!!!!
     }
 
     /*

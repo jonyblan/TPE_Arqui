@@ -15,8 +15,6 @@ enum Colors { WHITE=0x00FFFFFF, BLACK=0x00000000, RED=0x00FF0000, GREEN=0x0000FF
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void setScale(uint8_t newScale);
-void upscale();
-void downscale();
 void setCursor(uint8_t x, uint8_t y);
 uint32_t getPixel(uint64_t x, uint64_t y);
 void newLine();
@@ -30,6 +28,7 @@ void puts(char * string);
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
 void clear();
 void itoa(long num, char * string);
+void strconcat(char * str1, char * str2, char * dest);
 
 /**
  * bitmap

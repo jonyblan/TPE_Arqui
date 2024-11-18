@@ -52,6 +52,14 @@ void clear(){
     callClear();
 }
 
+void scale(char * argv){
+    if(strlen(argv) != 1){
+        printc("Illegal argument\n", RED);
+    } else {
+        callScale(argv[0]-'0');
+    }
+}
+
 /*
 void upscale(){
     callUpscale();

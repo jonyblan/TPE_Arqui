@@ -7,10 +7,10 @@ GLOBAL sysTime
 GLOBAL callNewLine
 GLOBAL callPutPixel
 GLOBAL callClear
-;GLOBAL callUpscale
-;GLOBAL callDownscale
+GLOBAL callScale
 ;GLOBAL callSetCursor
 GLOBAL callPrintRegs
+GLOBAL callPrintSystemTime
 
 GLOBAL excDiv0
 GLOBAL excInvalidOpCode
@@ -57,8 +57,14 @@ callPutPixel:
 callClear:
     syscallManager 193
 
-callPrintRegs:
+callScale:
     syscallManager 194
+
+callPrintRegs:
+    syscallManager 195
+
+callPrintSystemTime:
+    syscallManager 196
 
 ; excepciones
 

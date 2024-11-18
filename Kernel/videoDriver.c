@@ -84,14 +84,6 @@ void setScale(uint8_t newScale){
         scale = newScale;
 }
 
-void upscale(){
-    setScale(scale + 1);
-}
-
-void downscale(){
-    setScale(scale - 1);
-}
-
 /**
  * Setea el cursor a una coordenada particular, respetando el tamaño de los chars
  * @param x coordenada en x
@@ -353,7 +345,7 @@ void clear(){
     cursorY=0;
 }
 
-void itoa(long num, char * string){
+void itoa(int64_t num, char * string){
     char isneg = 0;
     uint8_t i = 0;
 
@@ -384,4 +376,42 @@ void itoa(long num, char * string){
         i--;
         j++;
     }
+}
+
+void itoh(uint64_t num, char * string){
+    uint8_t i = 0;
+
+    if(num==0){
+        string[i++] = '0';
+        string[i] = '\0';
+        return;
+    }
+
+    while(num != 0){
+        uint64_t aux = num % 16;
+        string[i++] = aux >= 10 ? (aux % 10) + 'A' : aux + '0';
+        num /= 16;
+    }
+    string[i] = '\0';
+
+    i--;
+    uint8_t j = 0;
+    while(j < i){
+        char aux = string[j];
+        string[j] = string[i];
+        string[i] = aux;
+        i--;
+        j++;
+    }
+}
+
+void strconcat(char * str1, char * str2, char * dest){
+    int i = 0;
+    for(; str1[i] != 0; i++){
+        dest[i] = str1[i];
+    }
+    for(int j = 0; str2[j] != 0; j++){
+        dest[i++] = str2[j];
+    }
+    dest[i] = 0;
 }

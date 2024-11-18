@@ -19,12 +19,10 @@ uint64_t sys_time(int32_t * dest);
 void callNewLine();
 void callPutPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void callClear();
-/*
-void callUpscale();
-void callDownscale();
+void callScale(uint8_t factor);
 void callSetCursor(uint8_t x, uint8_t y);
-*/
 void callPrintRegs();
+void callPrintSystemTime();
 
 //Excepciones
 extern void excInvalidOpCode();
