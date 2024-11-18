@@ -6,6 +6,8 @@ GLOBAL getHours
 GLOBAL getDay
 GLOBAL getMonth
 GLOBAL getYear
+GLOBAL outb
+GLOBAL inb
 
 section .text
 
@@ -147,4 +149,13 @@ getYear:
     in al, 71h
 
     sti
-    ret
+    retoutb:
+	mov rdx, rdi
+	mov rax, rsi
+	out dx, al
+	ret
+
+inb:
+	mov rdx, rdi
+	in al, dx
+	ret

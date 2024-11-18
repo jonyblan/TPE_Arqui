@@ -7,6 +7,11 @@
 #define FONT_BITMAP_WIDTH 128
 #define CHARACTER_HEIGHT 16
 #define CHARACTER_WIDTH 8
+#define SNAKE_BLOCK_WIDTH 23
+#define SNAKE_BLOCK_HEIGHT 23
+#define SNAKE_BACKGROUND_HEIGHT 20
+#define SNAKE_BACKGROUND_WIDTH 20
+
 
 enum Colors { WHITE=0x00FFFFFF, BLACK=0x00000000, RED=0x00FF0000, GREEN=0x0000FF00, BLUE=0x000000FF,
         ORANGE=0x00FF8000, YELLOW=0x00FFFF00, LIME=0x0080FF00, MINT=0x0000FF80, TURQUOISE=0x0000FFFF,
@@ -18,8 +23,18 @@ void setScale(uint8_t newScale);
 void setCursor(uint8_t x, uint8_t y);
 uint32_t getPixel(uint64_t x, uint64_t y);
 void newLine();
+<<<<<<< Updated upstream
 void erase();
 void putCharc(char character, uint32_t hexColor);
+=======
+void putBlock(uint32_t code, int offset_x, int offset_y);
+void printSnakeBackground();
+void clear();
+//void putChar(uint8_t ** start, uint32_t hexColor);
+//void putCharCoordf(uint8_t row, uint8_t col, uint32_t hexColor);
+//void putCharCoord(uint8_t row, uint8_t col);
+void putCharf(char character, uint32_t hexColor);
+>>>>>>> Stashed changes
 void putChar(char character);
 void printc(char * string, uint32_t hexColor);
 void print(char * string);

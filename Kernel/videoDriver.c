@@ -4,6 +4,7 @@
 /** videoDriver.c:
  * Contenido proporcionado por la cátedra
  */
+
 struct vbe_mode_info_structure {
 	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
 	uint8_t window_a;			// deprecated
@@ -54,6 +55,55 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
 
+void putBlock(uint32_t code, int offset_x, int offset_y){
+    uint32_t hexColor=0;
+    uint64_t x= offset_x* SNAKE_BLOCK_WIDTH;
+    uint64_t y= offset_y* SNAKE_BLOCK_HEIGHT;
+    if(code==-1){ //manzana
+        hexColor=0xff2f00; //color naranja
+    }
+    else{ 
+        if(code==0){ //background
+            if((offset_x%2==0 && offset_y%2==0) || (offset_x%2==1 && offset_y%2==1) ){
+                hexColor=0xff61c5; // color rosa
+            }
+            else{
+                hexColor=0x61ffb5;// color verde
+            }
+        }
+        else{ //snake
+            if(code % 2){ // jugadr 1
+                hexColor=0xf2ff00; // color amarillo
+            }
+            else{ // jugador 2
+                hexColor=0x00ffff; //color celeste
+            }
+        }
+    }
+    for(int i = 0; i < SNAKE_BLOCK_WIDTH; i++){
+        for(int j=0; j< SNAKE_BLOCK_HEIGHT; j++){
+            putPixel(hexColor,x+i,y+j);
+        }
+    }
+}
+
+void printSnakeBackground(){
+    for(int i=0; i<SNAKE_BACKGROUND_WIDTH;i++){
+        for(int j=0; j<SNAKE_BACKGROUND_HEIGHT;j++){
+            putBlock(0,i,j);
+        }
+    }
+}
+
+void clear(){
+    uint16_t width = VBE_mode_info->width;
+    uint16_t height= VBE_mode_info->height;
+    for(int i=0; i< width;i++){
+        for(int j=0; j< height;j++){
+            putPixel(0x000000,i,j);
+        }
+    }
+}
 /** videoDriver.c:
  * Fin del contenido proporcionado por la cátedra
 */
