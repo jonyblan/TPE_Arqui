@@ -25,7 +25,8 @@ static const ProgramByName programs[] = {
 static const uint64_t programCount = sizeof(programs);
  */
 
-static const char * functions[]={ "exit", "help", "clear", "div0", "invopcode", "printregs" };
+static const char * functions[]={ "exit", "help", "clear", "div0", "invopcode", "printregs",
+                                  "snake"/*, "snake2"*/ };
 
 static const uint16_t functionCount = sizeof(functions);
 
@@ -96,7 +97,9 @@ void run(const char * buffer){
         case 3: excDiv0(); break;
         case 4: excInvalidOpCode(); break;
         case 5: callPrintRegs(); break;
-        default: //TODO: arrojar excepcion 6!!!!
+        case 6: snake(); break;
+        //case 7: snake2(); break;
+        default: printc("Command not found", RED);//TODO: arrojar excepcion 6!!!!
     }
 
     /*
