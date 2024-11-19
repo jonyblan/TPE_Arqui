@@ -149,7 +149,8 @@ getYear:
     in al, 71h
 
     sti
-    retoutb:
+    ret
+outb:
 	mov rdx, rdi
 	mov rax, rsi
 	out dx, al
