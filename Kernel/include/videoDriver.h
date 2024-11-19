@@ -38,7 +38,6 @@ void print(char * string);
 void putsc(char * string, uint32_t hexColor);
 void puts(char * string);
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
-void clear();
 void itoa(long num, char * string);
 void strconcat(char * str1, char * str2, char * dest);
 

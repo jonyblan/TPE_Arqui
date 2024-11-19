@@ -95,18 +95,6 @@ void printSnakeBackground(){
     }
 }
 
-void clear(){
-    uint16_t width = VBE_mode_info->width;
-    uint16_t height= VBE_mode_info->height;
-    for(int i=0; i< width;i++){
-        for(int j=0; j< height;j++){
-            putPixel(0x000000,i,j);
-        }
-    }
-}
-/** videoDriver.c:
- * Fin del contenido proporcionado por la cátedra
-*/
 
 static uint8_t cursorX = 0;
 static uint8_t cursorY = 0;
