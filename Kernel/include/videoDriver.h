@@ -23,10 +23,8 @@ void setScale(uint8_t newScale);
 void setCursor(uint8_t x, uint8_t y);
 uint32_t getPixel(uint64_t x, uint64_t y);
 void newLine();
-<<<<<<< Updated upstream
 void erase();
 void putCharc(char character, uint32_t hexColor);
-=======
 void putBlock(uint32_t code, int offset_x, int offset_y);
 void printSnakeBackground();
 void clear();
@@ -34,7 +32,6 @@ void clear();
 //void putCharCoordf(uint8_t row, uint8_t col, uint32_t hexColor);
 //void putCharCoord(uint8_t row, uint8_t col);
 void putCharf(char character, uint32_t hexColor);
->>>>>>> Stashed changes
 void putChar(char character);
 void printc(char * string, uint32_t hexColor);
 void print(char * string);
