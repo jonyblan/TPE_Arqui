@@ -393,7 +393,7 @@ void itoa(int64_t num, char * string){
         return;
     }
     if(num<0){
-        num-=num;
+        num = -num;
         isneg = 1;
     }
     while(num != 0){

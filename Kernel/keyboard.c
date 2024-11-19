@@ -145,7 +145,8 @@ void key_handler(){
         else
             capslock=1;
         break;
-    case 0xAA: case 0xB6:
+    //por prueba y error: release de shift izquierdo es -56, del derecho es -4A.
+    case -0x56: case -0x4A:
         shift=0;
         break;
     case 0x2A: case 0x36:
@@ -159,7 +160,6 @@ void key_handler(){
             } else if (!(c >= 'a' && c <= 'z') && shift){
                 c = shift_map[key];
             }
-            shift = 0; //TODO: fix temporal de shift, porque no registra el shift release. Hay que apretar shift de nuevo para cada caracter
         }
     }
     //por afuera para guardar '\n' y '\b' tambien
