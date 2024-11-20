@@ -30,11 +30,15 @@ void load_idt() {
     setup_IDT_entry (0x06, (uint64_t)&_exception6Handler);
     setup_IDT_entry (0x20, (uint64_t)&_irq00Handler);
 	setup_IDT_entry (0x21, (uint64_t)&_irq01Handler);
+	setup_IDT_entry (0x2B, (uint64_t)&_irq12Handler);
 	setup_IDT_entry (0x80, (uint64_t)&_irq80Handler);
+	
 
-	// interrupciones habilitadas:
-	picMasterMask(0xFC);
-	picSlaveMask(0xFF);
+	// IRQ0 (timer), IRQ1 (keyboard), IRQ2 (cascade)
+	picMasterMask(0xF8);
+
+	// IRQ12 (mouse)
+	picSlaveMask(0xEF);
 
 	_sti();
 }

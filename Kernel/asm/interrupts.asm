@@ -11,6 +11,7 @@ GLOBAL _irq02Handler
 GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
+GLOBAL _irq12Handler
 GLOBAL _irq80Handler
 
 GLOBAL _exception0Handler   ;div por 0
@@ -151,6 +152,9 @@ _irq80Handler:
 	mov rdi, rax
 	call syscallDispatcher
 	iretq
+
+_irq12Handler:
+	irqHandlerMaster 12
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
