@@ -139,6 +139,11 @@ void key_handler(){
     case 0x0E:
         c = '\b';
         break;
+    case 0x1D:
+        //capturar registros
+        //_printRegisters();
+        print("control");
+        break;
     case 0x3A:
         if(capslock==1)
             capslock=0;
