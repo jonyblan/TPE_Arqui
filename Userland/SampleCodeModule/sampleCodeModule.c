@@ -9,6 +9,7 @@
 #define TEMP_BUFFER_SIZE 256
 #define TEMP_MAX_PARAM 5
 
+<<<<<<< Updated upstream
 /*
  * TODO: parametros
 typedef uint64_t (*Program)(uint64_t, const char * []);
@@ -26,24 +27,28 @@ static const uint64_t programCount = sizeof(programs);
  */
 
 static const char * functions[]={ "exit", "help", "clear", "div0", "invopcode", "printregs" };
+=======
+static const char * functions[]={ "exit", "help", "clear", "scale", "div0", "invopcode", 
+                                  "printregs", "time", "snake"/*, "snake2"*/ };
+>>>>>>> Stashed changes
 
 static const uint16_t functionCount = sizeof(functions);
 
 static uint8_t exit = 0;
-//static uint8_t shutdown = 0;
 
 void run(const char *);
 void shellLoop();
 
-void shell(uint64_t argc, const char * argv[]){
+int shell(uint64_t argc, const char * argv[]){
     printc("Shell initialized, welcome to gordOS\n", LINUX_BLUE);
+    if(exit){
+        return exit;
+    }
     shellLoop();
-    exit=0;
-    //sys_exit(exit);
 }
 
 void shellLoop(){
-    while(!exit/* && !shutdown*/){
+    while(!exit){
         printc("user@gordOS", LINUX_GREEN);
         printc("$ ", WHITE);
 
@@ -66,15 +71,7 @@ void shellLoop(){
             }
         }
 
-        /* modelo de uso de putPixel TODO borrar
-        for(int index=64; index<128; index++){
-            putPixel(0x0000FF00, index, 64);
-        }
-         */
-
         run(buffer);
-
-        //shellLoop(); //TODO no se si usarlo
     }
 }
 
@@ -90,47 +87,23 @@ void run(const char * buffer){
     }
 
     switch(functionId){
-        //case 0: exit=1; break; //exit()
+        case 0: exit=1; break; //exit()
         case 1: help(); break;
         case 2: clear(); break;
+<<<<<<< Updated upstream
         case 3: excDiv0(); break;
         case 4: excInvalidOpCode(); break;
         case 5: callPrintRegs(); break;
         default: //TODO: arrojar excepcion 6!!!!
+=======
+        case 3: scale(argv); break;
+        case 4: excDiv0(); break;
+        case 5: excInvalidOpCode(); break;
+        case 6: callPrintRegs(); break;
+        case 7: callPrintSystemTime(); break;
+        case 8: snake(); break;
+        //case 9: snake2(); break;
+        default: printc("Command not found\n", RED);
+>>>>>>> Stashed changes
     }
-
-    /*
-    char prog[TEMP_BUFFER_SIZE] = {0};
-    char progArgv[TEMP_MAX_PARAM][TEMP_BUFFER_SIZE] = {0};
-    uint8_t spaceCount = 0;
-    uint64_t argvIndex=0;
-    for(uint64_t i=0; i<bufferLength; i++){
-        if(buffer[i]!=' '){
-            if(spaceCount==0){
-                prog[i]=buffer[i];
-            } else {
-                progArgv[spaceCount-1][argvIndex++]=buffer[i];
-            }
-        } else {
-            if(spaceCount==0){
-                prog[i] = 0;
-            } else {
-                progArgv[spaceCount-1][argvIndex] = 0;
-            }
-            spaceCount++;
-            //todo: no chequea doble espacio
-        }
-    }
-    //busco el programa
-    uint8_t found = 0;
-    for(uint8_t k=0; k<programCount; k++){
-        if(strcmp(prog, programs[k].progName)==0){
-            found = 1;
-            sys_execve(programs[k], spaceCount, progArgv);
-        }
-    }
-    if(found == 0){
-        //todo: tirar exc 6
-    }
-     */
 }

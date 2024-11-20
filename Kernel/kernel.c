@@ -71,6 +71,7 @@ int main()
 
     clear();
 	((EntryPoint)sampleCodeModuleAddress)();
+    clear();
 
 	return 0;
 }
