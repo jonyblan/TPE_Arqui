@@ -1,4 +1,3 @@
-
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
@@ -15,12 +14,13 @@ GLOBAL _irq05Handler
 GLOBAL _irq80Handler
 
 GLOBAL _exception0Handler   ;div por 0
-GLOBAL _exception6Handler   ; invalid opcode
+GLOBAL _exception6Handler   ;invalid opcode
 GLOBAL _printRegisters
 
 EXTERN irqDispatcher
 EXTERN syscallDispatcher
 EXTERN exceptionDispatcher
+EXTERN printRegisters
 
 SECTION .text
 
@@ -79,6 +79,16 @@ SECTION .text
 %macro exceptionHandler 1
 	pushState
 
+    catchRegisters
+	mov rdi, %1 ; pasaje de parametro
+	mov rsi, regs ; array de registros
+	call exceptionDispatcher
+
+	popState
+	iretq
+%endmacro
+
+%macro catchRegisters 0
     mov [regs + 8], rax
     mov rax, [rsp]      ;rip
     mov [regs], rax
@@ -100,14 +110,7 @@ SECTION .text
     mov [regs + 128], r15
     mov rax, [rsp + 16] ;flags
     mov [regs + 136], rax
-	mov rdi, %1 ; pasaje de parametro
-	mov rsi, regs ; array de registros
-	call exceptionDispatcher
-
-	popState
-	iretq
 %endmacro
-
 
 _hlt:
 	sti
@@ -117,7 +120,6 @@ _hlt:
 _cli:
 	cli
 	ret
-
 
 _sti:
 	sti
@@ -149,7 +151,6 @@ _irq80Handler:
 	mov rdi, rax
 	call syscallDispatcher
 	iretq
-
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
@@ -184,16 +185,21 @@ _exception0Handler:
 _exception6Handler:
     exceptionHandler 6
 
-;Use exceptionHandler to print registers when desired
+;Catch registers values
 _printRegisters:
-    exceptionHandler 1
+    pushState
+
+    catchRegisters
+    mov rdi, regs
+    call printRegisters
+
+    popState
+    ret
 
 haltcpu:
 	cli
 	hlt
 	ret
-
-
 
 SECTION .bss
 	aux resq 1

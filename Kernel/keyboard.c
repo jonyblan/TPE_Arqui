@@ -141,8 +141,7 @@ void key_handler(){
         break;
     case 0x1D:
         //capturar registros
-        //_printRegisters();
-        print("control");
+        _printRegisters();
         break;
     case 0x3A:
         if(capslock==1)
