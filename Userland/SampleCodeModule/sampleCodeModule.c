@@ -55,23 +55,23 @@ void run(const char * buffer){
 
     uint8_t functionId = 0;
     char found = 0;
-    char * function = 0;
-    strcpyUntil(function, buffer, ' ');
+    char str[TEMP_BUFFER_SIZE];
+    strcpyUntil(str, buffer, ' ');
     for(uint8_t i=0; i<functionCount && !found; i++){
-        if(strcmp(function, functions[i]) == 0){
+        if(strcmp(str, functions[i]) == 0){
             found = 1;
             functionId = i;
         }
     }
 
-    char * argv = 0;
-    strcpyFrom(argv, buffer, ' ');
+    //sobreescribo el nombre de la funcion, ya la encontre
+    strcpyFrom(str, buffer, ' ');
 
     switch(functionId){
         case 0: exit=1; break; //exit()
         case 1: help(); break;
         case 2: clear(); break;
-        case 3: scale(argv); break;
+        case 3: scale(str); break;
         case 4: excDiv0(); break;
         case 5: excInvalidOpCode(); break;
         case 6: callPrintRegs(); break;

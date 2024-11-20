@@ -65,17 +65,18 @@ void printRegisters(uint64_t regs[18]){
 }
 
 void exceptionDispatcher(uint64_t exception, uint64_t regs[18]) {
+    clear();
     switch(exception) {
         case PRINT_REGISTERS_ID:
             break;
         case ZERO_EXCEPTION_ID:
-            putsc("\nException 0: Division by zero", RED);
+            putsc("Exception 0: Division by zero", RED);
             break;
         case INVALID_OPCODE_ID:
-            putsc("\nException 6: Invalid operation code", RED);
+            putsc("Exception 6: Invalid operation code", RED);
             break;
         default:
-            putsc("\nUncontrolled exception", RED);
+            putsc("Uncontrolled exception", RED);
     }
     printRegisters(regs);
     timer_wait(5*18); //un seg son 18 ticks

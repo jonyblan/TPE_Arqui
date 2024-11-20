@@ -18,6 +18,7 @@ void puts(const char * string);
 char getChar();
 
 void clear();
+void scale(char * argv);
 /*
 void upscale();
 void downscale();
