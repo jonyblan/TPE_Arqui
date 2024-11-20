@@ -45,7 +45,10 @@
 
 #define EMPTY_EVEN_COL 0x91FF33
 #define EMPTY_ODD_COL 0x7EE02B
-#define SNAKE_COL
+
+#define CANT_PLAYERS 2
+
+
 
 uint8_t pseudoRandom = 98;
 
@@ -182,9 +185,20 @@ int charToCode(char c){
 	return IGNORE_CODE;
 }
 
-void analizeKeyPressed1(Player *player1){
+void keyPressed(int moves[2]){
 	char c = getChar();
 	int move = charToCode(c);
+	if(move == IGNORE_CODE){
+		return ;
+	}
+	if(move >= UP2){
+		moves[1] = move;
+		return ;
+	}
+	moves[0] = move;
+}
+
+void analizeKeyPressed1(Player *player1, int move){
 	// head cant go backwards
 	if(	(move == IGNORE_CODE) || 
 		((player1->dir + move) == (UP1 + DOWN1)) || 
@@ -194,9 +208,7 @@ void analizeKeyPressed1(Player *player1){
 	player1->dir = move;
 }
 
-void analizeKeyPressed2(Player *player1){
-	char c = getChar();
-	int move = charToCode(c);
+void analizeKeyPressed2(Player *player1, int move){
 	// head cant go backwards
 	if(	(move == IGNORE_CODE) || 
 		((player1->dir + move) == (UP2 + DOWN2)) || 
@@ -273,9 +285,10 @@ int analizeColitions(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1, 
 	return ret;
 }
 
-int update1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1){
+int update1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1, int moves[CANT_PLAYERS], int isPl1){
 	pseudoRandom *= 3;
-	analizeKeyPressed1(player1);
+	keyPressed(moves);
+	analizeKeyPressed1(player1, moves[0]);
 	int ret;
 	int cont = 1;
 
@@ -376,9 +389,9 @@ int update1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1){
 	return ret;		
 }
 
-int update2(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1){
+int update2(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1, int moves[2]){
 	pseudoRandom *= 3;
-	analizeKeyPressed2(player1);
+	analizeKeyPressed2(player1, moves);
 	int ret;
 	int cont = 1;
 
@@ -403,14 +416,21 @@ int update2(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1){
 	return ret;		
 }
 
-int waitForStart(){
+void waitForStart(int moves[CANT_PLAYERS]){
 	char c;
 	int ret = IGNORE_CODE;
-	while(ret == IGNORE_CODE){
+	while((moves[0] == 0) || (moves[1] == 0)){
 		c = getChar();
 		ret = charToCode(c);
+		if(ret == IGNORE_CODE){
+			continue;
+		}
+		if(ret >= UP2){
+			moves[1] = ret;
+			continue;
+		}
+		moves[0] = ret;
 	}
-	return ret;
 }
 
 void snake(){
@@ -418,6 +438,9 @@ void snake(){
 	static BodyPart board[CANT_BLOCKS][CANT_BLOCKS];
 	static Player player1 = {3, 0};
 	static Player player2 = {3, 0};
+	static int moves[CANT_PLAYERS] = {0, 0};
+	moves[0] = 0; // it bugs after reloading snake if these 2 lines aren't here
+	moves[1] = 0;
 	for(int i = 0; i < CANT_BLOCKS; i++){
 		for(int j = 0; j < CANT_BLOCKS; j++){
 			board[i][j] = (BodyPart){0, NOTHING_CODE};
@@ -432,17 +455,18 @@ void snake(){
 	board[12][7] = (BodyPart){0, FOOD_CODE};
 
 	draw(board);
-	
-	player1.dir = waitForStart();
-	player2.dir = waitForStart();
+	waitForStart(moves);
+	player1.dir = moves[0];
+	player2.dir = moves[1];
 	player1.previousDir = player1.dir;
 	player2.previousDir = player2.dir;
+
 	int ret1 = 0;
 	int ret2 = 0;
 	int cont = 1;
 
 	while(cont == 1){
-		ret1 = update1(board, &player1);
+		ret1 = update1(board, &player1, moves);
 		//ret2 = update2(board, &player2);
 		draw(board);
 		counter++;
