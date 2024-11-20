@@ -285,7 +285,7 @@ int analizeColitions(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1, 
 	return ret;
 }
 
-int update1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1, int moves[CANT_PLAYERS], int isPl1){
+int update1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1, int moves[CANT_PLAYERS]){
 	pseudoRandom *= 3;
 	keyPressed(moves);
 	analizeKeyPressed1(player1, moves[0]);
