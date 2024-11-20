@@ -7,7 +7,7 @@
 #define TEMP_BUFFER_SIZE 256
 
 static const char * functions[]={ "exit", "help", "clear", "scale", "div0", "invopcode", 
-                                  "printregs", "time", "snake"/*, "snake2"*/ };
+                                  "printregs", "time", "snake"/*, "snake2"*/ , "8ball"};
 
 static const uint16_t functionCount = sizeof(functions);
 
@@ -78,7 +78,8 @@ void run(const char * buffer){
         case 6: callPrintRegs(); break;
         case 7: callPrintSystemTime(); break;
         case 8: snake(); break;
-        //case 9: snake2(); break;
+        //case 10: snake2(); break;
+	case 9: magicBall(str); break;
         default: printc("Command not found\n", RED);
     }
 }

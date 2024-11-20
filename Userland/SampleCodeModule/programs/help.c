@@ -11,4 +11,5 @@ void help(){
     printc("printregs: imprime los valores actuales de los registros del procesador\n", ORANGE);
     printc("time: imprime la hora del sistema\n", ORANGE);
     printc("snake: inicia el juego snake para un jugador\n", ORANGE);
+    printc("8ball {msg}: hacele una pregunta a la bola 8\n", ORANGE);
 }
