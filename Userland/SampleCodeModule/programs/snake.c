@@ -57,6 +57,7 @@ typedef struct {
 typedef struct {
 	int size;
 	int dir;
+	int previousDir;
 } Player;
 
 void drawFullBlock(int x, int y, uint32_t color){
@@ -89,45 +90,48 @@ void drawFood(int x, int y){
 	drawApple(x, y);
 }
 
-
 void drawSnake(int x, int y, int code){
-	drawHorizontal(x, y);
-	return ;
-	if(code & HEAD_CODE1 != 0){
-		switch(code - HEAD_CODE1){
-			case 1: drawLeft(x, y); break;
-			case 2: drawRight(x, y); break;
-			case 3: drawUp(x, y); break;
-			case 4: drawDown(x, y); break;
+	//drawHorizontal(x, y);
+	//return ;
+	if((code & HEAD_CODE1) != 0){
+		switch(code ^ HEAD_CODE1){
+			case CODE_LEFT: drawLeft(x, y); break;
+			case CODE_RIGHT: drawRight(x, y); break;
+			case CODE_UP: drawUp(x, y); break;
+			case CODE_DOWN: drawDown(x, y); break;
+			default: drawFullBlock(x, y, 0x00FFFF00);
 		}
+		return ;
 	}
-	else if(code & HEAD_CODE2 != 0){
-		switch(code - HEAD_CODE1){
-			case 1: drawLeft(x, y); break;
-			case 2: drawRight(x, y); break;
-			case 3: drawUp(x, y); break;
-			case 4: drawDown(x, y); break;
+	if((code & HEAD_CODE2) != 0){
+		switch(code ^ HEAD_CODE1){
+			case CODE_LEFT: drawLeft(x, y); break;
+			case CODE_RIGHT: drawRight(x, y); break;
+			case CODE_UP: drawUp(x, y); break;
+			case CODE_DOWN: drawDown(x, y); break;
+			default: drawFullBlock(x, y, 0x007F7F00);
 		}
+		return ;
 	}
-	else if(code & TAIL_CODE != 0){
-		switch(code - HEAD_CODE1){
-			case 1: drawRight(x, y); break;
-			case 2: drawLeft(x, y); break;
-			case 3: drawDown(x, y); break;
-			case 4: drawUp(x, y); break;
+	if((code & TAIL_CODE) != 0){
+		switch(code ^ HEAD_CODE1){
+			case CODE_LEFT: drawRight(x, y); break;
+			case CODE_RIGHT: drawLeft(x, y); break;
+			case CODE_UP: drawUp(x, y); break;
+			case CODE_DOWN: drawDown(x, y); break;
+			default: drawFullBlock(x, y, 0x00FF0000);
 		}
+		return ;
 	}
-	else{
-		switch(code){
-			case HORIZONTAL_CODE: drawHorizontal(x, y); break;
-			case VERTICAL_CODE: drawVertical(x, y); break;
-			case BOTTOM_RIGHT_CODE: drawBottomRight(x, y); break;
-			case BOTTOM_LEFT_CODE: drawBottomLeft(x, y); break;
-			case TOP_RIGHT_CODE: drawTopRight(x, y); break;
-			case TOP_LEFT_CODE: drawTopLeft(x, y); break;
-		}
+	switch(code){
+		case HORIZONTAL_CODE: drawHorizontal(x, y); break;
+		case VERTICAL_CODE: drawVertical(x, y); break;
+		case BOTTOM_RIGHT_CODE: drawBottomRight(x, y); break;
+		case BOTTOM_LEFT_CODE: drawBottomLeft(x, y); break;
+		case TOP_RIGHT_CODE: drawTopRight(x, y); break;
+		case TOP_LEFT_CODE: drawTopLeft(x, y); break;
+		default: drawFullBlock(x, y, 0x00FFFF00);
 	}
-	drawFullBlock(x, y, 0x0000FF);
 }
 
 void drawBlock(int x, int y, int code){
@@ -281,10 +285,67 @@ int update1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1){
 				ret = analizeColitions(board, player1, i, j);
 				int newXHead = i + dirToX(player1->dir);
 				int newYHead = j + dirToY(player1->dir);
-				board[newXHead][newYHead].code = HEAD_CODE1 | CODE_RIGHT;
+				switch(2 * dirToX(player1->dir) + dirToY(player1->dir)){
+					case -1: 
+						board[newXHead][newYHead].code = HEAD_CODE1 | CODE_DOWN; 
+					break;
+					case 1: 
+						board[newXHead][newYHead].code = HEAD_CODE1 | CODE_UP; 
+					break;
+					case -2:
+						board[newXHead][newYHead].code = HEAD_CODE1 | CODE_RIGHT; 
+					break;
+					case 2:
+						board[newXHead][newYHead].code = HEAD_CODE1 | CODE_LEFT; 
+					break;
+				}
 				board[newXHead][newYHead].lifeTime = player1->size;
-				
-				board[i][j].code = HORIZONTAL_CODE;
+
+				if(player1->previousDir == player1->dir){
+					if(dirToX(player1->dir) != 0){
+						board[i][j].code = HORIZONTAL_CODE;
+					}
+					else{
+						board[i][j].code = VERTICAL_CODE;
+					}
+				}
+				else{
+						board[i][j].code = HORIZONTAL_CODE;
+					switch(2 * dirToX(player1->previousDir) + dirToY(player1->previousDir)){
+						case -1: 
+							if(dirToX(player1->dir) == 1){
+								board[i][j].code = TOP_LEFT_CODE;
+							}
+							else{
+								board[i][j].code = TOP_RIGHT_CODE;
+							}
+						break;
+						case 1: 
+							if(dirToX(player1->dir) == 1){
+								board[i][j].code = BOTTOM_LEFT_CODE;
+							}
+							else{
+								board[i][j].code = BOTTOM_RIGHT_CODE;
+							}
+						break;
+						case -2:
+							if(dirToY(player1->dir) == 1){
+								board[i][j].code = TOP_LEFT_CODE;
+							}
+							else{
+								board[i][j].code = BOTTOM_LEFT_CODE;
+							}
+						break;
+						case 2:
+							if(dirToY(player1->dir) == 1){
+								board[i][j].code = TOP_RIGHT_CODE;
+							}
+							else{
+								board[i][j].code = BOTTOM_RIGHT_CODE;
+							}
+						break;
+					}
+				}
 				cont = 0;
 			}
 		}
@@ -310,6 +371,8 @@ int update1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1){
 		}
 	}
 
+	player1->previousDir = player1->dir;
+
 	return ret;		
 }
 
@@ -325,7 +388,7 @@ int update2(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player1){
 				ret = analizeColitions(board, player1, i, j);
 				int newXHead = i + dirToX(player1->dir);
 				int newYHead = j + dirToY(player1->dir);
-				board[newXHead][newYHead].code = HEAD_CODE2 | CODE_RIGHT;
+				board[newXHead][newYHead].code = HEAD_CODE2 | CODE_UP;
 				board[newXHead][newYHead].lifeTime = player1->size;
 				board[i][j].code = HORIZONTAL_CODE;
 				cont = 0;
@@ -360,7 +423,7 @@ void snake(){
 			board[i][j] = (BodyPart){0, NOTHING_CODE};
 		}
 	}
-	board[7][5] = (BodyPart){3, HEAD_CODE1|CODE_RIGHT};
+	board[7][5] = (BodyPart){3, HEAD_CODE1|CODE_LEFT};
 	board[6][5] = (BodyPart){2, HORIZONTAL_CODE};
 	board[5][5] = (BodyPart){1, TAIL_CODE|CODE_RIGHT};
 	board[7][9] = (BodyPart){3, HEAD_CODE2|CODE_RIGHT};
@@ -369,32 +432,11 @@ void snake(){
 	board[12][7] = (BodyPart){0, FOOD_CODE};
 
 	draw(board);
-
-	/*
-	drawVertical(0, 0);
-	drawHorizontal(0, 1);
-	drawUp(0, 2);
-	drawDown(0, 3);
-	drawLeft(0, 4);
-	drawRight(0, 5);
-	drawBottomLeft(0, 6);
-	drawTopLeft(0, 7);
-	drawTopRight(0, 8);
-	drawBottomRight(0, 9);
-	*/
-	
-	drawDown(0, 0);
-	drawVertical(0, 1);
-	drawBottomLeft(0, 2);
-	drawHorizontal(1, 2);
-	drawTopRight(2, 2);
-	drawVertical(2, 3);
-	drawBottomRight(2, 4);
-	drawTopLeft(1, 4);
-	drawUp(1, 5);
 	
 	player1.dir = waitForStart();
 	player2.dir = waitForStart();
+	player1.previousDir = player1.dir;
+	player2.previousDir = player2.dir;
 	int ret1 = 0;
 	int ret2 = 0;
 	int cont = 1;
