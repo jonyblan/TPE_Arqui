@@ -47,7 +47,9 @@ void shellLoop(){
                 }
             }
         }
-        run(buffer);
+	if(buffer[0] != 0){
+        	run(buffer);
+	}
     }
 }
 
@@ -66,7 +68,6 @@ void run(const char * buffer){
 
     //sobreescribo el nombre de la funcion, ya la encontre
     strcpyFrom(str, buffer, ' ');
-
     switch(functionId){
         case 0: exit=1; break; //exit()
         case 1: help(); break;
