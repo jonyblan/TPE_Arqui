@@ -1,6 +1,7 @@
 #include "arquilib.h"
 #include <stdint.h>
 #include "libasm.h"
+#include "time.h"
 
 #define SCREEN_SIZE 600
 
@@ -57,6 +58,7 @@
 #define HEAD_COL 0x00000000
 #define EYE_COL 0x00FFFFFF
 #define ERROR_COL 0x00FF00FF
+#define LETTER_COL 0xFFF200
 
 #define BOTH_LOSE_CODE 1
 #define PLAYER1_WINS_CODE 2
@@ -96,6 +98,10 @@ void drawEmpty(int x, int y){
 		col = EMPTY_ODD_COL;
 	}
 	drawFullBlock(x, y, col);
+}
+
+void drawLetter(int x, int y){
+		drawFullBlock(x, y, LETTER_COL);
 }
 
 void drawFood(int x, int y){
@@ -185,6 +191,17 @@ void drawBlock(int x, int y, int code){
 	else{
 		drawSnake(x, y, code);
 	}
+}
+void drawStartUpAnimation(){
+	int signX=2;
+	int signY=11;
+	drawLetterS(signX,signY); 
+	drawLetterN(signX+5,signY);
+	drawLetterA(signX+10,signY); 
+	drawLetterK(signX+15,signY); 
+	drawLetterE(signX+20,signY); 
+	drawLetterExclamation(signX+25,signY);
+	drawSnakeAnimation(1,24);
 }
 
 void draw(BodyPart board[CANT_BLOCKS][CANT_BLOCKS]){
@@ -525,7 +542,14 @@ void snake(){
 	moves[1] = 0;
 	
 	iniBoard(board);	
-
+	
+	timerWait(18);
+	draw(board);
+	timerWait(18);
+	drawStartUpAnimation();
+	timerWait(18);
+	
+	timerWait(18);
 	draw(board);
 	waitForStart(moves);
 	player1.dir = moves[0];
@@ -942,4 +966,194 @@ void drawBottomRight(int x, int y, int col){
 			}
 		}
 	}
+}
+
+void drawLetterS(int x, int y){
+		int matrix[7][4] = {
+			{0,1,1,0},
+			{1,0,0,1},
+			{1,0,0,0},
+			{0,1,1,0},
+			{0,0,0,1},
+			{1,0,0,1},
+			{0,1,1,0}};
+		for(int i=0; i<7; i++){
+			for(int j=0; j<4;j++){
+				if(matrix[i][j]==1){
+					drawLetter(x+j,y+i);
+				}
+			}
+		}
+	}
+void drawLetterN(int x, int y){
+	int matrix[7][4] = {
+		{1,0,0,1},
+		{1,1,0,1},
+		{1,1,0,1},
+		{1,0,1,1},
+		{1,0,1,1},
+		{1,0,0,1},
+		{1,0,0,1}};
+	for(int i=0; i<7;i++){
+		for(int j=0; j<4; j++){
+			if(matrix[i][j]==1){
+				drawLetter(x+j,y+i);
+			}
+		}
+	}
+}
+void drawLetterA(int x, int y){
+	int matrix[7][4] = {
+		{0,1,1,0},
+		{1,0,0,1},
+		{1,0,0,1},
+		{1,1,1,1},
+		{1,0,0,1},
+		{1,0,0,1},
+		{1,0,0,1}};
+	for(int i=0; i<7;i++){
+		for(int j=0; j<4;j++){
+			if(matrix[i][j]==1){
+				drawLetter(x+j,y+i);
+			}
+		}
+	}
+}
+void drawLetterK(int x, int y){
+	int matrix[7][4] = {
+		{1,0,0,1},
+		{1,0,0,1},
+		{1,0,1,0},
+		{1,1,0,0},
+		{1,0,1,0},
+		{1,0,1,1},
+		{1,0,0,1}};
+	for(int i=0; i<7; i++){
+		for(int j=0; j<4; j++){
+			if(matrix[i][j]==1){
+				drawLetter(x+j,y+i);
+			}
+		}
+	}
+}
+void drawLetterE(int x, int y){
+	int matrix[7][4] = {
+		{1,1,1,1},
+		{1,0,0,0},
+		{1,0,0,0},
+		{1,1,1,0},
+		{1,0,0,0},
+		{1,0,0,0},
+		{1,1,1,1}};
+	for(int i=0; i<7;i++){
+		for(int j=0; j<4;j++){
+			if(matrix[i][j]==1){
+				drawLetter(x+j,y+i);
+			}
+		}
+	}
+}
+void drawLetterExclamation(int x, int y){
+	int matrix[6][1] = {
+		{1},
+		{1},
+		{1},
+		{1},
+		{1},
+		{0}};
+	for(int i=0; i<7; i++){
+		for(int j=0; j<1;j++){
+			if(matrix[i][j]==1){
+				drawLetter(x+j,y+i);
+			}
+		}
+	}
+	drawApple(x,y+6);
+}
+void drawSnakeAnimation(int x, int y){
+	int timeBetweenFrames=2;
+	for(int i=0; i<26;i++){
+		if(i==0){
+			drawLeft(x,y,HEAD_COL);
+			timerWait(timeBetweenFrames);
+		}
+		if(i==1){
+			drawLeft(x,y,HEAD_COL);
+			drawHorizontal(x-1,y,SNAKE1_COL);
+			timerWait(timeBetweenFrames);
+		}
+		if(i>1){
+
+			drawLeft(x,y,HEAD_COL);
+			drawHorizontal(x-1,y,SNAKE1_COL);
+			drawHorizontal(x-2,y,SNAKE1_COL);
+			drawEmpty(x-3,y);
+			timerWait(timeBetweenFrames);
+		}
+		x++;
+	}
+	for(int i=0; i<7; i++){
+		y--;
+		if(i==0){
+			drawDown(x,y,HEAD_COL);
+			drawBottomRight(x,y+1,SNAKE1_COL);
+			drawHorizontal(x-1,y+1,SNAKE1_COL);
+			drawEmpty(x-2,y+1);
+			drawEmpty(x-3,y+1);
+			timerWait(timeBetweenFrames);
+		}
+		if(i==1){
+			drawDown(x,y,HEAD_COL);
+			drawVertical(x,y+1,SNAKE1_COL);
+			drawVertical(x,y+2,SNAKE1_COL);
+			drawEmpty(x-1,y+2);
+			timerWait(timeBetweenFrames);
+		}
+		if(i>1 && i<6){
+			drawDown(x,y,HEAD_COL);
+			drawVertical(x,y+1,SNAKE1_COL);
+			drawVertical(x,y+2,SNAKE1_COL);
+			drawEmpty(x,y+3);
+			timerWait(timeBetweenFrames);
+		}
+		if(i==6){
+			drawDown(x,y,HEAD_COL);
+			drawVertical(x,y+1,SNAKE1_COL);
+			drawVertical(x,y+2,SNAKE1_COL);
+			drawVertical(x,y+3,SNAKE1_COL);
+			timerWait(timeBetweenFrames);
+		}
+	}
+	x++;
+	drawLeft(x,y,HEAD_COL);
+	drawTopLeft(x-1,y,SNAKE1_COL);
+	drawVertical(x-1,y+1,SNAKE1_COL);
+	drawVertical(x-1,y+2,SNAKE1_COL);
+	drawEmpty(x-1,y+3);
+	timerWait(timeBetweenFrames);
+	x++;
+	drawLeft(x,y,HEAD_COL);
+	drawHorizontal(x-1,y,SNAKE1_COL);
+	drawTopLeft(x-2,y,SNAKE1_COL);
+	drawVertical(x-2,y+1,SNAKE1_COL);
+	drawEmpty(x-2,y+2);
+	timerWait(timeBetweenFrames);
+	x++;
+	drawHorizontal(x-1,y,SNAKE1_COL);
+	drawHorizontal(x-2,y,SNAKE1_COL);
+	drawHorizontal(x-3,y,SNAKE1_COL);
+	drawEmpty(x-3,y+1);
+	timerWait(timeBetweenFrames);
+	x++;
+	drawHorizontal(x-2,y,SNAKE1_COL);
+	drawHorizontal(x-3,y,SNAKE1_COL);
+	drawEmpty(x-4,y);
+	timerWait(timeBetweenFrames);
+	x++;
+	drawHorizontal(x-3,y,SNAKE1_COL);
+	drawEmpty(x-4,y);
+	timerWait(timeBetweenFrames);
+	x++;
+	drawEmpty(x-4,y);
+	timerWait(timeBetweenFrames);
 }

@@ -23,6 +23,7 @@ void callScale(uint8_t factor);
 void callSetCursor(uint8_t x, uint8_t y);
 void callPrintRegs();
 void callPrintSystemTime();
+uint64_t callTicksElapsed();
 
 //Excepciones
 extern void excInvalidOpCode();

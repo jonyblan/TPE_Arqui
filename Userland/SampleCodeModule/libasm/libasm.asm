@@ -3,6 +3,7 @@ GLOBAL sysReadChar
 GLOBAL sysWriteColor
 ;GLOBAL sys_execve
 GLOBAL sysTime
+GLOBAL _hlt
 
 GLOBAL callNewLine
 GLOBAL callPutPixel
@@ -11,6 +12,7 @@ GLOBAL callScale
 ;GLOBAL callSetCursor
 GLOBAL callPrintRegs
 GLOBAL callPrintSystemTime
+GLOBAL callTicksElapsed
 
 GLOBAL excDiv0
 GLOBAL excInvalidOpCode
@@ -66,6 +68,9 @@ callPrintRegs:
 callPrintSystemTime:
     syscallManager 196
 
+callTicksElapsed:
+    syscallManager 197
+
 ; excepciones
 
 excDiv0:
@@ -77,3 +82,8 @@ excDiv0:
 excInvalidOpCode:
     mov cr6, rax
     ret
+
+_hlt:
+	sti
+	hlt
+	ret

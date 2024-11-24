@@ -9,7 +9,7 @@
 #define STANDARD_INPUT 0
 #define STANDARD_OUTPUT 1
 
-#define SYSCALL_COUNT 197
+#define SYSCALL_COUNT 198
 //todo: cambiar el valor a medida que agregue syscalls
 
 static uint64_t sys_exit_impl(int32_t ret);
@@ -24,6 +24,7 @@ void callClear();
 void callScale(uint8_t factor);
 void callPrintRegs();
 void callPrintSystemTime();
+uint64_t callTicksElapsed();
 
 typedef uint64_t (*Syscall)(uint64_t, uint64_t, uint64_t, uint64_t);
 static Syscall syscalls[SYSCALL_COUNT];
@@ -40,6 +41,7 @@ void fillSyscalls(){
     syscalls[194] = (Syscall) callScale;
     syscalls[195] = (Syscall) callPrintRegs;
     syscalls[196] = (Syscall) callPrintSystemTime;
+    syscalls[197] = (Syscall) callTicksElapsed;
 }
 
 //los registros como parametros de C son del orden:
@@ -142,4 +144,8 @@ void callPrintSystemTime(){
     putCharc(str[0], MINT);
     putCharc(str[1], MINT);
     putChar('\n');
+}
+
+uint64_t callTicksElapsed(){
+    return ticks_elapsed();
 }
