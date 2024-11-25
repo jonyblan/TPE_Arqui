@@ -63,6 +63,7 @@
 #define PLAYER2_WINS_CODE 3
 
 #define CANT_PLAYERS 2
+#define STARTING_SIZE 4
 
 uint8_t pseudoRandom = 98;
 
@@ -212,7 +213,11 @@ void draw(BodyPart board[CANT_BLOCKS][CANT_BLOCKS]){
 	}
 }
 
-int charToCode(char c){
+
+int charToCode(char c, int cantPlayers){
+	if(c == 0){
+		return '\0';
+	}
 	if(c == 'w'){
 		return UP1;
 	}
@@ -224,6 +229,9 @@ int charToCode(char c){
 	}
 	if(c == 'd'){
 		return RIGHT1;
+	}
+	if(cantPlayers == 1){
+		return IGNORE_CODE;
 	}
 	if(c == 'i'){
 		return UP2;
@@ -237,18 +245,15 @@ int charToCode(char c){
 	if(c == 'l'){
 		return RIGHT2;
 	}
-	if(c == 0){
-		return '\0';
-	}
 	return IGNORE_CODE;
 }
 
-void keyPressed(int moves[2]){
+void keyPressed(int moves[], int cantPlayers){
 	char c;
 	int move;
 	while(1 == 1){
 		c = getChar();
-		move = charToCode(c);
+		move = charToCode(c, cantPlayers);
 		if(move == 0){
 			return ;
 		}
@@ -437,6 +442,27 @@ void changeLifetimes(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], int ignore){
 		}
 	}
 }
+
+void changeLifetimes1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], int ignore){
+	for(int i = 0; i < CANT_BLOCKS; i++){
+		for(int j = 0; j < CANT_BLOCKS; j++){
+			if((board[i][j].code == NOTHING_CODE) || (board[i][j].code == FOOD_CODE)){
+				continue;
+			}
+
+			if(ignore == 1){
+				continue;
+			}
+
+			board[i][j].lifeTime--;
+			
+			if(board[i][j].lifeTime == 0){
+				board[i][j].code = NOTHING_CODE;
+			}
+		}
+	}
+}
+
 	//TODO
 int processHead(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, int headCode, int playerCode){
 	int ret;
@@ -461,9 +487,9 @@ int processHead(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, int he
 	return ret;
 }
 
-int update(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, int moves[CANT_PLAYERS], int headCode, int playerCode, int playerIndex){
+int update(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, int moves[], int headCode, int playerCode, int playerIndex, int cantPlayers){
 	pseudoRandom *= 3;
-	keyPressed(moves);
+	keyPressed(moves, cantPlayers);
 	analizeKeyPressed(player, moves[playerIndex]);
 	int ret;
 
@@ -478,17 +504,31 @@ int update(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, int moves[C
 	return ret;		
 }
 
-void waitForStart(int moves[CANT_PLAYERS]){
+void waitForStart(int moves[]){
 	char c;
 	int ret = IGNORE_CODE;
 	while((moves[0] == 0) || (moves[1] == 0)){
 		c = getChar();
-		ret = charToCode(c);
+		ret = charToCode(c, 2);
 		if(ret == IGNORE_CODE){
 			continue;
 		}
+
 		if(ret >= UP2){
 			moves[1] = ret;
+			continue;
+		}
+		moves[0] = ret;
+	}
+}
+
+void waitForStart1(int moves[]){
+	char c;
+	int ret = IGNORE_CODE;
+	while(moves[0] == 0){
+		c = getChar();
+		ret = charToCode(c, 1);
+		if(ret == IGNORE_CODE){
 			continue;
 		}
 		moves[0] = ret;
@@ -513,6 +553,21 @@ void iniBoard(BodyPart board[CANT_BLOCKS][CANT_BLOCKS]){
 	board[12][7] = (BodyPart){0, FOOD_CODE};
 }
 
+void iniBoard1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS]){
+	for(int i = 0; i < CANT_BLOCKS; i++){
+		for(int j = 0; j < CANT_BLOCKS; j++){
+			board[i][j] = (BodyPart){0, NOTHING_CODE};
+		}
+	}
+	
+	// this lines can be changed at will. although beware of not colliding the snakes
+	// nor the food with any of the snakes at this starting positions
+	board[7][7] = (BodyPart){3, HEAD_CODE1|CODE_LEFT};
+	board[6][7] = (BodyPart){2, HORIZONTAL_CODE|PLAYER1_CODE};
+	board[5][7] = (BodyPart){1, HORIZONTAL_CODE|PLAYER1_CODE};
+	board[12][7] = (BodyPart){0, FOOD_CODE};
+}
+
 int isGameEnded(int ret1, int ret2){
 	if(((ret1 & SNAKE_COLLITION_CODE) != 0) || ((ret1 & WALL_COLLITION_CODE) != 0)){
 		if(((ret2 & SNAKE_COLLITION_CODE) != 0) || ((ret2 & WALL_COLLITION_CODE) != 0)){
@@ -526,14 +581,82 @@ int isGameEnded(int ret1, int ret2){
 	return 0;
 }
 
-void snake(){
+int isGameEnded1(int ret1){
+	if(((ret1 & SNAKE_COLLITION_CODE) != 0) || ((ret1 & WALL_COLLITION_CODE) != 0)){
+		return PLAYER1_WINS_CODE;
+	}
+	return 0;
+}
+
+/*
+IMPORTANTE:
+Podria haber una funcion de snake main y que todo pase ahi sin importar la cantidad de jugadores.
+Si hubiesemos hecho todo con un vector de jugadores, seria una buena idea
+(gran parte del codigo esta optimizada para eso, gran parte esta para 2 jugadores)
+pero ya que esta para 1 o 2 usuarios, decidimos crear 2 funciones, muy parecidas y con
+muchas funciones compartidas (y unas pocas especificas) para simplificar el codigo,
+estar viendo un if(cantPlayers == 1){}else{} durante todo el codigo baja mucho
+la calidad de lectura del codigo
+(tl;dw es una decision de diseño que haya 2 funciones casi iguales, no nos manden
+de nuevo a PI)
+*/
+
+void snake1(){
+	int cantPlayers = 1;
 	int counter = 0;
 	static BodyPart board[CANT_BLOCKS][CANT_BLOCKS];
-	static Player player1 = {4, 0};
-	static Player player2 = {4, 0};
-	static int moves[CANT_PLAYERS] = {0, 0};
-	moves[0] = 0; // it bugs after reloading snake if these 2 lines aren't here
+	static Player player1 = {STARTING_SIZE, 0, 0};
+	static int moves[1] = {0};
+	moves[0] = 0; // it bugs after reloading snake if these lineS aren't here
+	player1.size = STARTING_SIZE;
+	
+	iniBoard1(board);	
+
+	draw(board);
+	
+	drawStartUpAnimation();
+	timerWait(5);
+	
+	draw(board);
+	waitForStart1(moves);
+	player1.dir = moves[0];
+	player1.previousDir = player1.dir;
+
+	int ret1 = 0;
+	int cont = 1;
+	int gameEnd;
+
+	while(cont == 1){
+		ret1 = update(board, &player1, moves, HEAD_CODE1, PLAYER1_CODE, 0, cantPlayers);
+		int code1 = 0;
+		if(ret1 == FOOD_COLLITION_CODE){
+			code1 = 1;
+		}
+		changeLifetimes1(board, code1);
+		draw(board);
+		counter++;
+		gameEnd = isGameEnded1(ret1);
+		if(gameEnd != 0){
+			cont = 0;
+		}
+	}
+	clear();
+	printc("Final score: \0", 0x0000FF00);
+	printcint(player1.size - 4, 0x0000FF00);
+	printc("\n\0", 0x0000FF00);
+}
+
+void snake2(){
+	int cantPlayers = 2;
+	int counter = 0;
+	static BodyPart board[CANT_BLOCKS][CANT_BLOCKS];
+	static Player player1 = {STARTING_SIZE, 0};
+	static Player player2 = {STARTING_SIZE, 0};
+	static int moves[2] = {0, 0};
+	moves[0] = 0; // it bugs after reloading snake if these lines aren't here
 	moves[1] = 0;
+	player1.size = STARTING_SIZE;
+	player2.size = STARTING_SIZE;
 	
 
 	iniBoard(board);	
@@ -555,8 +678,8 @@ void snake(){
 	int gameEnd;
 
 	while(cont == 1){
-		ret1 = update(board, &player1, moves, HEAD_CODE1, PLAYER1_CODE, 0);
-		ret2 = update(board, &player2, moves, HEAD_CODE2, PLAYER2_CODE, 1);
+		ret1 = update(board, &player1, moves, HEAD_CODE1, PLAYER1_CODE, 0, cantPlayers);
+		ret2 = update(board, &player2, moves, HEAD_CODE2, PLAYER2_CODE, 1, cantPlayers);
 		int code1 = 0;
 		int code2 = 0;
 		if(ret1 == FOOD_COLLITION_CODE){
@@ -585,6 +708,18 @@ void snake(){
 		msg = "Come on, you cant be BOTH bad\n\0";
 	}
 	printc(msg, 0x00FF0000);
+}
+
+void snake(char *arg){
+	if(strcmp(arg, "snake 1") == 0){
+		snake1();
+	}
+	else if(strcmp(arg, "snake 2") == 0){
+		snake2();
+	}
+	else{
+		printc("Please choose 1 or 2 players\n\0", 0x00FF0000);
+	}
 }
 
 void drawApple(x, y){
