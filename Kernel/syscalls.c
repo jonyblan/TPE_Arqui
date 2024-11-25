@@ -5,11 +5,12 @@
 #include "interrupts.h"
 #include "syscalls.h"
 #include "exceptions.h"
+#include "beep.h";
 
 #define STANDARD_INPUT 0
 #define STANDARD_OUTPUT 1
 
-#define SYSCALL_COUNT 198
+#define SYSCALL_COUNT 197
 //todo: cambiar el valor a medida que agregue syscalls
 
 static uint64_t sys_exit_impl(int32_t ret);
@@ -18,13 +19,13 @@ uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, 
 //static uint64_t sys_execve_impl(const char * progPath, uint64_t argc, char * const argv[]);
 static uint64_t sysTimeImpl(int32_t * dest);
 
+void callBeep();
 void callNewLine();
 void callPutPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void callClear();
 void callScale(uint8_t factor);
 void callPrintRegs();
 void callPrintSystemTime();
-uint64_t callTicksElapsed();
 
 typedef uint64_t (*Syscall)(uint64_t, uint64_t, uint64_t, uint64_t);
 static Syscall syscalls[SYSCALL_COUNT];
@@ -33,6 +34,7 @@ void fillSyscalls(){
     //syscalls[1] = (Syscall) sys_exit_impl;
     syscalls[3] = (Syscall) sysReadCharImpl;
     syscalls[4] = (Syscall) sysWriteColorImpl;
+    syscalls[6] = (Syscall) callBeep;
     //syscalls[11] = (Syscall) sys_execve_impl;
     syscalls[13] = (Syscall) sysTimeImpl;
     syscalls[191] = (Syscall) callNewLine;
@@ -41,7 +43,6 @@ void fillSyscalls(){
     syscalls[194] = (Syscall) callScale;
     syscalls[195] = (Syscall) callPrintRegs;
     syscalls[196] = (Syscall) callPrintSystemTime;
-    syscalls[197] = (Syscall) callTicksElapsed;
 }
 
 //los registros como parametros de C son del orden:
@@ -91,6 +92,10 @@ static uint64_t sysTimeImpl(int32_t * dest){
     //Esta implementacion devuelve el tiempo desde que se inicio el sistema
     //Otra syscall imprime la fecha y hora actual
     return seconds_elapsed();
+}
+
+void callBeep(){
+	beep_driver();
 }
 
 void callNewLine(){
@@ -144,8 +149,4 @@ void callPrintSystemTime(){
     putCharc(str[0], MINT);
     putCharc(str[1], MINT);
     putChar('\n');
-}
-
-uint64_t callTicksElapsed(){
-    return ticks_elapsed();
 }
