@@ -3,6 +3,7 @@
 #include "videoDriver.h"
 #include <time.h>
 #include "mouse.h"
+#include "beepDriver.h";
 
 static void int_20();
 static void int_21();
@@ -15,9 +16,6 @@ void irqDispatcher(uint64_t irq) {
 			break;
 		case 1:
 			int_21();
-			break;
-		case 12:
-			int_32();
 			break;
 	}
     return;
