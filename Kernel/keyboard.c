@@ -129,10 +129,6 @@ Scan code	Key	Scan code	Key	Scan code	Key	Scan code	Key
 void key_handler(){
     if(bufferIndex==BUFFER_SIZE) {return;}
     uint64_t key = getInput();
-    if(key == 0x1D){    //control
-        //capturar registros
-        _printRegisters();
-    }
     char c = 0;
     switch(key) {
     case 0x1C:  //enter
@@ -142,6 +138,10 @@ void key_handler(){
     case 0x0E:  //backspace
         c = '\b';
         break;
+/*
+    case 0x1D:
+        _printRegisters();
+*/
     case 0x3A:  //capslock
         if(capslock==1)
             capslock=0;

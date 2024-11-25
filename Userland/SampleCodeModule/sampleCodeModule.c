@@ -69,7 +69,7 @@ void run(const char * buffer){
     //sobreescribo el nombre de la funcion, ya la encontre
     strcpyFrom(str, buffer, ' ');
     switch(functionId){
-        case 0: exit=1; break; //exit()
+        case 0: exit=1; break;
         case 1: help(); break;
         case 2: clear(); break;
         case 3: scale(str); break;

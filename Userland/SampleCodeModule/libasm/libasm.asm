@@ -32,7 +32,7 @@ section .text
     ret
 %endmacro
 
-sys_exit:
+sysExit:
     syscallManager 1
 
 sysReadChar:
@@ -41,13 +41,10 @@ sysReadChar:
 sysWriteColor:
     syscallManager 4
 
-sys_execve:
-    syscallManager 11
-
-sys_time:
+sysTime:
     syscallManager 13
 
-; funciones nuevas no deben incluir el prefijo sys_ y deben comenzar de 191 en adelante
+; funciones nuevas no deben incluir el prefijo sys y deben comenzar de 191 en adelante
 
 callNewLine:
     syscallManager 191

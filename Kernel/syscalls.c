@@ -13,10 +13,10 @@
 #define SYSCALL_COUNT 198
 //todo: cambiar el valor a medida que agregue syscalls
 
-static uint64_t sysExitImpl(int32_t ret);
+void sysExitImpl();
 char sysReadCharImpl(uint32_t fileDesc);
 uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, uint32_t hexColor);
-static uint64_t sysTimeImpl(int32_t * dest);
+uint64_t sysTimeImpl(int32_t * dest);
 
 void callBeep();
 void callNewLine();
@@ -57,11 +57,12 @@ uint64_t syscallDispatcher(uint64_t rdi, uint64_t rsi, uint64_t rdx, uint64_t r1
     return 1;
 }
 
-/*
-static uint64_t sysExitImpl(int32_t ret){
-    return sys_exit(ret);
+
+void sysExitImpl(){
+    while(1){
+        _hlt;
+    }
 }
- */
 
 char sysReadCharImpl(uint32_t fileDesc){
     if(fileDesc != STANDARD_INPUT) { return 0; }
@@ -74,7 +75,7 @@ uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, 
     return len;
 }
 
-static uint64_t sysTimeImpl(int32_t * dest){
+uint64_t sysTimeImpl(int32_t * dest){
     //note: la syscall de linux devuelve el tiempo desde epoch (1/1/1970).
     //Esta implementacion devuelve el tiempo desde que se inicio el sistema
     //Otra syscall imprime la fecha y hora actual

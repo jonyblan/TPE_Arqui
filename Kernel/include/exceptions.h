@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+extern uint64_t resetMain();
+
 void exceptionDispatcher(int exception);
 
 #endif

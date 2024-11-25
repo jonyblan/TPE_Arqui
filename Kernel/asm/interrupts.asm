@@ -7,10 +7,6 @@ GLOBAL _hlt
 
 GLOBAL _irq00Handler
 GLOBAL _irq01Handler
-GLOBAL _irq02Handler
-GLOBAL _irq03Handler
-GLOBAL _irq04Handler
-GLOBAL _irq05Handler
 GLOBAL _irq12Handler
 GLOBAL _irq80Handler
 
@@ -158,23 +154,12 @@ _irq00Handler:
 
 ;Keyboard
 _irq01Handler:
-	irqHandlerMaster 1
-
-;Cascade pic never called
-_irq02Handler:
-	irqHandlerMaster 2
-
-;Serial Port 2 and 4
-_irq03Handler:
-	irqHandlerMaster 3
-
-;Serial Port 1 and 3
-_irq04Handler:
-	irqHandlerMaster 4
-
-;USB
-_irq05Handler:
-	irqHandlerMaster 5
+    push rax
+    in al, 0x60
+    cmp al, 0x1D
+    pop rax
+    je _printRegisters
+    irqHandlerMaster 1
 
 
 ;Zero Division Exception
@@ -188,8 +173,13 @@ _exception6Handler:
 ;Catch registers values
 _printRegisters:
     catchRegisters
+    pushState
     mov rdi, regs
     call printRegisters
+    ; signal pic EOI (End of Interrupt)
+    mov al, 20h
+    out 20h, al
+    popState
     iretq
 
 haltcpu:

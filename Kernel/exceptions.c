@@ -18,4 +18,6 @@ void exceptionDispatcher(uint64_t exception, uint64_t regs[18]) {
             printc("Uncontrolled exception", RED);
     }
     printRegisters(regs);
+    timer_wait(10*TICKS_PER_SECOND);
+    resetMain();
 }

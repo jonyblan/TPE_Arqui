@@ -58,7 +58,4 @@ void printRegisters(uint64_t regs[REGISTER_COUNT]){
     itoh(regs[17], buffer);
     printc(buffer, TURQUOISE);
     putChar('\n');
-
-    timer_wait(10*TICKS_PER_SECOND);
-    resetMain();
 }
