@@ -1,5 +1,4 @@
 #include "videoDriver.h"
-#include <stdint.h>
 
 /** videoDriver.c:
  * Contenido proporcionado por la cátedra
@@ -54,47 +53,6 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+1]   =  (hexColor >> 8) & 0xFF; 
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
-
-void putBlock(uint32_t code, int offset_x, int offset_y){
-    uint32_t hexColor=0;
-    uint64_t x= offset_x* SNAKE_BLOCK_WIDTH;
-    uint64_t y= offset_y* SNAKE_BLOCK_HEIGHT;
-    if(code==-1){ //manzana
-        hexColor=0xff2f00; //color naranja
-    }
-    else{ 
-        if(code==0){ //background
-            if((offset_x%2==0 && offset_y%2==0) || (offset_x%2==1 && offset_y%2==1) ){
-                hexColor=0xff61c5; // color rosa
-            }
-            else{
-                hexColor=0x61ffb5;// color verde
-            }
-        }
-        else{ //snake
-            if(code % 2){ // jugadr 1
-                hexColor=0xf2ff00; // color amarillo
-            }
-            else{ // jugador 2
-                hexColor=0x00ffff; //color celeste
-            }
-        }
-    }
-    for(int i = 0; i < SNAKE_BLOCK_WIDTH; i++){
-        for(int j=0; j< SNAKE_BLOCK_HEIGHT; j++){
-            putPixel(hexColor,x+i,y+j);
-        }
-    }
-}
-
-void printSnakeBackground(){
-    for(int i=0; i<SNAKE_BACKGROUND_WIDTH;i++){
-        for(int j=0; j<SNAKE_BACKGROUND_HEIGHT;j++){
-            putBlock(0,i,j);
-        }
-    }
-}
-
 
 static uint8_t cursorX = 0;
 static uint8_t cursorY = 0;
@@ -185,6 +143,9 @@ void newLine(){
     }
 }
 
+/**
+ * Elimina el ultimo caracter ingresado, con soporte para saltos de linea
+ */
 void erase(){
     uint16_t width = VBE_mode_info->width;
     if(cursorX==0 && cursorY>0){
@@ -316,7 +277,7 @@ void putChar(char character){
     putCharc(character, WHITE);
 }
 
-/*
+/**
  * Imprime string con color sin salto de linea
  * @param string string a imprimir
  * @param hexColor color 0x00RRGGBB
@@ -331,11 +292,15 @@ void printc(char * string, uint32_t hexColor){
     }
 }
 
+/**
+ * Imprime string en blanco sin salto de linea
+ * @param string string a imprimir
+ */
 void print(char * string){
     printc(string, WHITE);
 }
 
-/*
+/**
  * Imprime string con color con salto de linea
  * @param string string a imprimir
  * @param hexColor color 0x00RRGGBB
@@ -345,13 +310,12 @@ void putsc(char * string, uint32_t hexColor){
     newLine();
 }
 
-/*
+/**
  * Imprime string en blanco con salto de linea
  * @param string string a imprimir
  */
 void puts(char * string){
-    char * aux = string;
-    putsc(aux, WHITE);
+    putsc(string, WHITE);
 }
 
 /**
@@ -383,6 +347,11 @@ void clear(){
     cursorY=0;
 }
 
+/**
+ * Basado en libreria estandar, convierte un numero a string base 10
+ * @param num numero a convertir
+ * @param string string de pasaje
+ */
 void itoa(int64_t num, char * string){
     char isneg = 0;
     uint8_t i = 0;
@@ -416,6 +385,11 @@ void itoa(int64_t num, char * string){
     }
 }
 
+/**
+ * Basado en libreria estandar, convierte un numero a string base 16
+ * @param num numero a convertir
+ * @param string string de pasaje
+ */
 void itoh(uint64_t num, char * string){
     uint8_t i = 0;
 
@@ -443,6 +417,12 @@ void itoh(uint64_t num, char * string){
     }
 }
 
+/**
+ * Basado en libreria estandar, concatena dos strings, agregando el segundo al final del primero
+ * @param str1 string al que se concatena
+ * @param str2 string a concatenar
+ * @param dest string de pasaje
+ */
 void strconcat(char * str1, char * str2, char * dest){
     int i = 0;
     for(; str1[i] != 0; i++){

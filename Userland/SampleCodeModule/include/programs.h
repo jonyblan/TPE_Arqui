@@ -3,6 +3,7 @@
 
 void help();
 void snake();
+void magicBall(char *argv);
 //void snake2();
 
 #endif

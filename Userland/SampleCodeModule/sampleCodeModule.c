@@ -47,9 +47,9 @@ void shellLoop(){
                 }
             }
         }
-	if(buffer[0] != 0){
-        	run(buffer);
-	}
+        if(buffer[0] != 0){
+                run(buffer);
+        }
     }
 }
 
@@ -79,7 +79,7 @@ void run(const char * buffer){
         case 7: callPrintSystemTime(); break;
         case 8: snake(); break;
         //case 10: snake2(); break;
-	case 9: magicBall(str); break;
+	    case 9: magicBall(str); break;
         default: printc("Command not found\n", RED);
     }
 }

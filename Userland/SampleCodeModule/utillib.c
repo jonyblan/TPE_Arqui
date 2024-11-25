@@ -1,5 +1,10 @@
 #include "utillib.h"
 
+/**
+ * Basada en la libreria estandar de C, devuelve la cantidad de chars de un string
+ * @param string string a contar chars
+ * @return cantidad de chars
+ */
 uint64_t strlen(const char * string){
     uint64_t ret = 0;
     while(string[ret]!=0){
@@ -8,6 +13,12 @@ uint64_t strlen(const char * string){
     return ret;
 }
 
+/**
+ * Basada en la libreria estandar de C, compara dos strings
+ * @param str1 string a comparar
+ * @param str2 string por el que comparar
+ * @return 0 si son iguales, 1 si str1 es "mayor", -1 si str2 es "mayor"
+ */
 int8_t strcmp(const char* str1, const char* str2){
     int8_t cmp = 0;
     for(int i = 0; str1[i]!=0 && str2[i]!=0 && cmp == 0; i++){
@@ -18,6 +29,12 @@ int8_t strcmp(const char* str1, const char* str2){
     return cmp;
 }
 
+/**
+ * Inspirada en la libreria estandar de C, copia un string hasta un caracter definido
+ * @param dest string donde pegar
+ * @param src string del que copiar
+ * @param stop caracter hasta el cual copiar
+ */
 void strcpyUntil(char * dest, char * src, char stop){
     if(src == 0 || src[0] == 0){
         dest[0] = 0;
@@ -30,6 +47,12 @@ void strcpyUntil(char * dest, char * src, char stop){
     dest[i] = 0;
 }
 
+/**
+ * Inspirada en la libreria estandar de C, copia un string desde un caracter definido
+ * @param dest string donde pegar
+ * @param src string del que copiar
+ * @param start caracter desde el cual copiar
+ */
 void strcpyFrom(char * dest, char * src, char start){
     if(src == 0 || src[0] == 0){
         dest[0] = 0;

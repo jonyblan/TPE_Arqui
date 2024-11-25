@@ -25,20 +25,15 @@ uint32_t getPixel(uint64_t x, uint64_t y);
 void newLine();
 void erase();
 void putCharc(char character, uint32_t hexColor);
-void putBlock(uint32_t code, int offset_x, int offset_y);
-void printSnakeBackground();
-void clear();
-//void putChar(uint8_t ** start, uint32_t hexColor);
-//void putCharCoordf(uint8_t row, uint8_t col, uint32_t hexColor);
-//void putCharCoord(uint8_t row, uint8_t col);
-void putCharf(char character, uint32_t hexColor);
 void putChar(char character);
 void printc(char * string, uint32_t hexColor);
 void print(char * string);
 void putsc(char * string, uint32_t hexColor);
 void puts(char * string);
 void putCharScreen(uint8_t row, uint8_t col, uint32_t hexColor, uint64_t x, uint64_t y);
-void itoa(long num, char * string);
+void clear();
+void itoa(int64_t num, char * string);
+void itoh(uint64_t num, char * string);
 void strconcat(char * str1, char * str2, char * dest);
 
 /**

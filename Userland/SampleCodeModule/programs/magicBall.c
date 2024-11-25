@@ -1,5 +1,5 @@
-#include "utillib.h";
-#include "arquilib.h";
+#include "utillib.h"
+#include "arquilib.h"
 #include <stdint.h>
 
 static const char * messages[] = {

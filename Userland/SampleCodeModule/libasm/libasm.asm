@@ -1,7 +1,6 @@
-;GLOBAL sys_exit
+;GLOBAL sysExit
 GLOBAL sysReadChar
 GLOBAL sysWriteColor
-;GLOBAL sys_execve
 GLOBAL sysTime
 GLOBAL _hlt
 
@@ -9,7 +8,6 @@ GLOBAL callNewLine
 GLOBAL callPutPixel
 GLOBAL callClear
 GLOBAL callScale
-;GLOBAL callSetCursor
 GLOBAL callPrintRegs
 GLOBAL callPrintSystemTime
 GLOBAL callTicksElapsed

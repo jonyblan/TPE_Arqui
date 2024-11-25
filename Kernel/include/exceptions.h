@@ -1,4 +1,8 @@
-extern uint64_t resetMain();
+#ifndef EXCEPTIONS_H
+#define EXCEPTIONS_H
+
+#include <stdint.h>
 
 void exceptionDispatcher(int exception);
-void printRegisters(void);
+
+#endif

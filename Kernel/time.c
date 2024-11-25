@@ -1,13 +1,4 @@
 #include "time.h"
-#include <stdint.h>
-#include "interrupts.h"
-
-extern uint8_t getSecs();
-extern uint8_t getMins();
-extern uint8_t getHours();
-extern uint8_t getDay();
-extern uint8_t getMonth();
-extern uint8_t getYear();
 
 static uint64_t ticks = 0;
 
@@ -20,7 +11,7 @@ uint64_t ticks_elapsed() {
 }
 
 uint64_t seconds_elapsed() {
-	return ticks / 18;
+	return ticks / TICKS_PER_SECOND;
 }
 
 void timer_wait(uint64_t waitTime){

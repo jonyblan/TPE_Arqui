@@ -1,20 +1,19 @@
-#include <time.h>
-#include <exceptions.h>
-#include "videoDriver.h"
+#include "exceptions.h"
 #include "keyboard.h"
+#include "printRegisters.h"
 
 #define BUFFER_SIZE 1024
 
 static char msg[BUFFER_SIZE];
-static uint8_t currentIndex = 0;
-static uint8_t returnIndex = 0;
+static uint8_t bufferIndex = 0;
+static uint8_t cycleIndex = 0;
 
 char getMsg(){
-    msg[returnIndex-1]=0;
-    if(currentIndex == returnIndex || returnIndex==BUFFER_SIZE)
+    msg[cycleIndex-1]=0;
+    if(bufferIndex == cycleIndex || cycleIndex==BUFFER_SIZE)
         return 0;
     else
-        return msg[returnIndex++];
+        return msg[cycleIndex++];
 }
 
 static char capslock = 0;
@@ -128,32 +127,32 @@ Scan code	Key	Scan code	Key	Scan code	Key	Scan code	Key
 */
 
 void key_handler(){
-    if(currentIndex==BUFFER_SIZE) {return;}
+    if(bufferIndex==BUFFER_SIZE) {return;}
     uint64_t key = getInput();
+    if(key == 0x1D){    //control
+        //capturar registros
+        _printRegisters();
+    }
     char c = 0;
     switch(key) {
-    case 0x1C:
+    case 0x1C:  //enter
         c = '\n';
         newLine();
         break;
-    case 0x0E:
+    case 0x0E:  //backspace
         c = '\b';
         break;
-    case 0x1D:
-        //capturar registros
-        _printRegisters();
-        break;
-    case 0x3A:
+    case 0x3A:  //capslock
         if(capslock==1)
             capslock=0;
         else
             capslock=1;
         break;
-    //por prueba y error: release de shift izquierdo es -56, del derecho es -4A.
-    case -0x56: case -0x4A:
+    //por prueba y error: release de shift izquierdo es -56, del derecho es -4A. No coincide con la fuente.
+    case -0x56: case -0x4A: //shift release
         shift=0;
         break;
-    case 0x2A: case 0x36:
+    case 0x2A: case 0x36:   //shift press
         shift=1;
         break;
     default:
@@ -168,7 +167,7 @@ void key_handler(){
     }
     //por afuera para guardar '\n' y '\b' tambien
     if(c!=0) {
-        msg[currentIndex++] = c;
-        msg[currentIndex] = 0;
+        msg[bufferIndex++] = c;
+        msg[bufferIndex] = 0;
     }
 }

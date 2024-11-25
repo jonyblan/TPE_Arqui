@@ -78,14 +78,10 @@ SECTION .text
 
 
 %macro exceptionHandler 1
-	pushState
-
     catchRegisters
 	mov rdi, %1 ; pasaje de parametro
 	mov rsi, regs ; array de registros
 	call exceptionDispatcher
-
-	popState
 	iretq
 %endmacro
 
@@ -191,14 +187,10 @@ _exception6Handler:
 
 ;Catch registers values
 _printRegisters:
-    pushState
-
     catchRegisters
     mov rdi, regs
     call printRegisters
-
-    popState
-    ret
+    iretq
 
 haltcpu:
 	cli
