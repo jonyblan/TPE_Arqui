@@ -77,7 +77,7 @@ void run(const char * buffer){
         case 5: excInvalidOpCode(); break;
         case 6: callPrintRegs(); break;
         case 7: callPrintSystemTime(); break;
-        case 8: snake2(); break;
+        case 8: snake(); break;
         //case 11: snake2(); break;
 	case 9: magicBall(str); break;
 	case 10: beep(); break;

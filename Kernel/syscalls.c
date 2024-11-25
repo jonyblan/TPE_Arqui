@@ -5,7 +5,7 @@
 #include "interrupts.h"
 #include "syscalls.h"
 #include "exceptions.h"
-#include "beep.h";
+#include "beepDriver.h";
 
 #define STANDARD_INPUT 0
 #define STANDARD_OUTPUT 1
