@@ -19,3 +19,4 @@ Image/x64BareBonesImage.vmdk
 *.elf
 *.o
 *.o
+.gdb_history
