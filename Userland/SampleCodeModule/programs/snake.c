@@ -32,8 +32,6 @@
 #define DOWN2 20
 #define RIGHT2 21
 #define LEFT2 23
-
-
 #define IGNORE_CODE 256
 
 #define PLAYER1_CODE 512
@@ -98,10 +96,6 @@ void drawEmpty(int x, int y){
 		col = EMPTY_ODD_COL;
 	}
 	drawFullBlock(x, y, col);
-}
-
-void drawLetter(int x, int y){
-		drawFullBlock(x, y, LETTER_COL);
 }
 
 void drawFood(int x, int y){
@@ -192,6 +186,11 @@ void drawBlock(int x, int y, int code){
 		drawSnake(x, y, code);
 	}
 }
+
+void drawLetter(int x, int y){
+		drawFullBlock(x, y, LETTER_COL);
+}
+
 void drawStartUpAnimation(){
 	int signX=2;
 	int signY=11;
@@ -203,6 +202,7 @@ void drawStartUpAnimation(){
 	drawLetterExclamation(signX+25,signY);
 	drawSnakeAnimation(1,24);
 }
+
 
 void draw(BodyPart board[CANT_BLOCKS][CANT_BLOCKS]){
 	for(int i = 0; i < CANT_BLOCKS; i++){
@@ -263,7 +263,6 @@ void keyPressed(int moves[2]){
 		}
 	}
 }
-
 void analizeKeyPressed(Player *player, int move){
 	// head cant go backwards
 	if(	(move == IGNORE_CODE) || 
@@ -342,7 +341,6 @@ int analizeColitions(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, i
 	ret += SNAKE_COLLITION_CODE * analizeBodyCollition(board, newXHead, newYHead);
 	return ret;
 }
-
 void moveHead(int i, int j, BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, int headCode){
 	int newXHead = i + dirToX(player->dir);
 	int newYHead = j + dirToY(player->dir);
@@ -392,7 +390,7 @@ void setCode(int i, int j, BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *pla
 				else{
 					board[i][j].code = BOTTOM_RIGHT_CODE;
 				}
-			break;
+				break;
 			case -2:
 				if(dirToY(player->dir) == 1){
 					board[i][j].code = TOP_LEFT_CODE;
@@ -413,7 +411,6 @@ void setCode(int i, int j, BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *pla
 	}
 	board[i][j].code |= playerCode;
 }
-
 // The idea is that if a snake's size is, say 5, each time the head moves to a block
 // that block belongs to the snake for a total of 5 frames
 // or, in other words, it's starting lifetime is 5
@@ -424,7 +421,6 @@ void changeLifetimes(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], int ignore){
 			if((board[i][j].code == NOTHING_CODE) || (board[i][j].code == FOOD_CODE)){
 				continue;
 			}
-
 			if(((board[i][j].code & PLAYER1_CODE) != 0) && ((ignore & 1) != 0)){
 				continue;
 			}
@@ -441,9 +437,7 @@ void changeLifetimes(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], int ignore){
 		}
 	}
 }
-
-
-//TODO
+	//TODO
 int processHead(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, int headCode, int playerCode){
 	int ret;
 	int cont = 1;
@@ -541,15 +535,13 @@ void snake(){
 	moves[0] = 0; // it bugs after reloading snake if these 2 lines aren't here
 	moves[1] = 0;
 	
+
 	iniBoard(board);	
-	
-	timerWait(18);
 	draw(board);
-	timerWait(18);
-	drawStartUpAnimation();
-	timerWait(18);
 	
-	timerWait(18);
+	drawStartUpAnimation();
+	timerWait(5);
+	
 	draw(board);
 	waitForStart(moves);
 	player1.dir = moves[0];
@@ -639,7 +631,6 @@ void drawVertical(int x, int y, int col){
 	}
 }
 
-
 void drawUp(int x, int y, int col){
 	int matrix[20][20] = 
 		{{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -715,7 +706,6 @@ void drawDown(int x, int y, int col){
 		}
 	}
 }
-
 void drawLeft(int x, int y, int col){
 	int matrix[20][20] = {
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
@@ -776,7 +766,6 @@ void drawHorizontal(int x, int y, int col){
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}};
-	
 	drawEmpty(x, y);
 	int trueX = x * BLOCK_SIZE;
 	int trueY = y * BLOCK_SIZE;
@@ -849,8 +838,8 @@ void drawBottomLeft(int x, int y, int col){
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}};
-	
-	drawEmpty(x, y);
+
+		drawEmpty(x, y);
 	int trueX = x * BLOCK_SIZE;
 	int trueY = y * BLOCK_SIZE;
 	for(int i = trueX; i < trueX + BLOCK_SIZE; i++){
@@ -884,9 +873,7 @@ void drawTopLeft(int x, int y, int col){
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0}};
-
-
-	drawEmpty(x, y);
+		drawEmpty(x, y);
 	int trueX = x * BLOCK_SIZE;
 	int trueY = y * BLOCK_SIZE;
 	for(int i = trueX; i < trueX + BLOCK_SIZE; i++){
@@ -920,7 +907,6 @@ void drawTopRight(int x, int y, int col){
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
-	
 	drawEmpty(x, y);
 	int trueX = x * BLOCK_SIZE;
 	int trueY = y * BLOCK_SIZE;
@@ -955,7 +941,6 @@ void drawBottomRight(int x, int y, int col){
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0},
 		{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}};
-	
 	drawEmpty(x, y);
 	int trueX = x * BLOCK_SIZE;
 	int trueY = y * BLOCK_SIZE;
@@ -967,7 +952,6 @@ void drawBottomRight(int x, int y, int col){
 		}
 	}
 }
-
 void drawLetterS(int x, int y){
 		int matrix[7][4] = {
 			{0,1,1,0},

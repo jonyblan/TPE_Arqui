@@ -11,6 +11,7 @@ GLOBAL callScale
 GLOBAL callPrintRegs
 GLOBAL callPrintSystemTime
 GLOBAL callTicksElapsed
+GLOBAL beepSys
 
 GLOBAL excDiv0
 GLOBAL excInvalidOpCode
@@ -68,6 +69,9 @@ callPrintSystemTime:
 
 callTicksElapsed:
     syscallManager 197
+
+beepSys:
+	syscallManager 6
 
 ; excepciones
 

@@ -4,6 +4,7 @@
 void help();
 void snake();
 void magicBall(char *argv);
+void beep();
 //void snake2();
 
 #endif

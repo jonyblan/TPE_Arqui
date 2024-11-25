@@ -5,6 +5,7 @@
 #include "interrupts.h"
 #include "syscalls.h"
 #include "exceptions.h"
+#include "beepDriver.h";
 
 #define STANDARD_INPUT 0
 #define STANDARD_OUTPUT 1
@@ -17,6 +18,7 @@ char sysReadCharImpl(uint32_t fileDesc);
 uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, uint32_t hexColor);
 static uint64_t sysTimeImpl(int32_t * dest);
 
+void callBeep();
 void callNewLine();
 void callPutPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void callClear();
@@ -32,6 +34,7 @@ void fillSyscalls(){
     //syscalls[1] = (Syscall) sysExitImpl;
     syscalls[3] = (Syscall) sysReadCharImpl;
     syscalls[4] = (Syscall) sysWriteColorImpl;
+    syscalls[6] = (Syscall) callBeep;
     syscalls[13] = (Syscall) sysTimeImpl;
     syscalls[191] = (Syscall) callNewLine;
     syscalls[192] = (Syscall) callPutPixel;
@@ -76,6 +79,10 @@ static uint64_t sysTimeImpl(int32_t * dest){
     //Esta implementacion devuelve el tiempo desde que se inicio el sistema
     //Otra syscall imprime la fecha y hora actual
     return seconds_elapsed();
+}
+
+void callBeep(){
+	beep_driver();
 }
 
 void callNewLine(){
