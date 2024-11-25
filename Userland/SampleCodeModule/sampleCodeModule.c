@@ -77,7 +77,7 @@ void run(const char * buffer){
         case 5: excInvalidOpCode(); break;
         case 6: callPrintRegs(); break;
         case 7: callPrintSystemTime(); break;
-        case 8: snake(buffer); break;
+        case 8: clear(); snake(str); break;
 	    case 9: magicBall(str); break;
 	    case 10: beep(); break;
         default: printc("Command not found\n", RED);

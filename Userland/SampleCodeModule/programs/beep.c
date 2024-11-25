@@ -1,6 +1,8 @@
 #include "arquilib.h"
 #include "libasm.h"
 
-beep(){
+extern void beepSys();
+
+void beep(){
 	beepSys();
 }

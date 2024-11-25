@@ -2,6 +2,7 @@
 #include <stdint.h>
 #include "libasm.h"
 #include "time.h"
+#include "utillib.h"
 
 #define SCREEN_SIZE 600
 
@@ -65,6 +66,26 @@
 #define CANT_PLAYERS 2
 #define STARTING_SIZE 4
 
+void drawApple(int x, int y);
+void drawLeft(int x, int y, int col);
+void drawRight(int x, int y, int col);
+void drawUp(int x, int y, int col);
+void drawDown(int x, int y, int col);
+void drawHorizontal(int x, int y, int col);
+void drawVertical(int x, int y, int col);
+void drawBottomRight(int x, int y, int col);
+void drawBottomLeft(int x, int y, int col);
+void drawTopRight(int x, int y, int col);
+void drawTopLeft(int x, int y, int col);
+void drawLetter(int x, int y);
+void drawLetterS(int x, int y);
+void drawLetterN(int x, int y);
+void drawLetterA(int x, int y);
+void drawLetterK(int x, int y);
+void drawLetterE(int x, int y);
+void drawLetterExclamation(int x, int y);
+void drawSnakeAnimation(int x, int y);
+
 uint8_t pseudoRandom = 98;
 
 typedef struct {
@@ -127,7 +148,6 @@ void drawSnake(int x, int y, int code){
 	// as head_code1 contains both head_code and player1_code
 	// which causes a problem when bodyparts are
 	// assigned a code such as horizontal_code | player1_code
-	// TODO fix it later, its just ugly
 	// also, 2 ifs for heads, and 2 ifs for body, just why
 	if((code & HEAD_CODE1) == HEAD_CODE1){
 		switch(code ^ HEAD_CODE1){
@@ -463,7 +483,6 @@ void changeLifetimes1(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], int ignore){
 	}
 }
 
-	//TODO
 int processHead(BodyPart board[CANT_BLOCKS][CANT_BLOCKS], Player *player, int headCode, int playerCode){
 	int ret;
 	int cont = 1;
@@ -711,10 +730,10 @@ void snake2(){
 }
 
 void snake(char *arg){
-	if(strcmp(arg, "snake 1") == 0){
+	if(strcmp(arg, "1") == 0){
 		snake1();
 	}
-	else if(strcmp(arg, "snake 2") == 0){
+	else if(strcmp(arg, "2") == 0){
 		snake2();
 	}
 	else{
@@ -722,11 +741,9 @@ void snake(char *arg){
 	}
 }
 
-void drawApple(x, y){
+void drawApple(int x, int y){
 	drawFullBlock(x, y, FOOD_COL);
-	return ;
-	int trueX = x * BLOCK_SIZE;
-	int trueY = y * BLOCK_SIZE;
+	return;
 }
 
 // bit tables for drawing

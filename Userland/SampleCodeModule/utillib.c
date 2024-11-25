@@ -35,7 +35,7 @@ int8_t strcmp(const char* str1, const char* str2){
  * @param src string del que copiar
  * @param stop caracter hasta el cual copiar
  */
-void strcpyUntil(char * dest, char * src, char stop){
+void strcpyUntil(char * dest, const char * src, char stop){
     if(src == 0 || src[0] == 0){
         dest[0] = 0;
     }
@@ -53,7 +53,7 @@ void strcpyUntil(char * dest, char * src, char stop){
  * @param src string del que copiar
  * @param start caracter desde el cual copiar
  */
-void strcpyFrom(char * dest, char * src, char start){
+void strcpyFrom(char * dest, const char * src, char start){
     if(src == 0 || src[0] == 0){
         dest[0] = 0;
     }

@@ -3,7 +3,7 @@
 #include "videoDriver.h"
 #include <time.h>
 #include "mouse.h"
-#include "beepDriver.h";
+#include "beepDriver.h"
 
 static void int_20();
 static void int_21();

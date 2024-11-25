@@ -17,7 +17,7 @@ void print(const char * string);
 void putChar(const char c);
 void puts(const char * string);
 char getChar();
-
+void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void clear();
 void scale(char * argv);
 /*

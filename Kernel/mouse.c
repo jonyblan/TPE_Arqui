@@ -1,3 +1,4 @@
+#include "mouse.h"
 
 void mouse_handler() {
     // Step 1: Enable the auxiliary (mouse) device

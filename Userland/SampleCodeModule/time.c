@@ -2,6 +2,8 @@
 #include "time.h"
 #include "libasm.h"
 
+extern void _hlt();
+
 uint64_t ticksElapsed(){
     return callTicksElapsed();
 }

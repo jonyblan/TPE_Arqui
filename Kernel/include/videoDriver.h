@@ -2,6 +2,7 @@
 #define VIDEO_DRIVER_H
 
 #include <stdint.h>
+#include "lib.h"
 
 #define FONT_BITMAP_HEIGHT 96
 #define FONT_BITMAP_WIDTH 128

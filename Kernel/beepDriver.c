@@ -1,13 +1,10 @@
-#include <beepDriver.h>
+#include "beepDriver.h"
 #include <stdint.h>
-#include "videoDriver.h";
+#include "videoDriver.h"
 
 #define PIT_CONTROL_PORT 0x43
 #define PIT_CHANNEL_2 0x42
 #define PC_SPEAKER_PORT 0x61
-
-extern void outb(uint8_t arg1, uint8_t arg2);
-extern uint8_t inb(uint8_t arg1);
 
 /*
 IMPORTANTE:

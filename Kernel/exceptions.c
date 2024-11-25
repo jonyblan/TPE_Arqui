@@ -1,11 +1,9 @@
 #include "videoDriver.h"
 #include "time.h"
 #include "printRegisters.h"
+#include "exceptions.h"
 
-#define ZERO_EXCEPTION_ID 0
-#define INVALID_OPCODE_ID 6
-
-void exceptionDispatcher(uint64_t exception, uint64_t regs[18]) {
+void exceptionDispatcher(uint64_t exception, uint64_t regs[REGS_COUNT]) {
     clear();
     switch(exception) {
         case ZERO_EXCEPTION_ID:

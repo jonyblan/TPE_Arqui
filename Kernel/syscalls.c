@@ -5,7 +5,8 @@
 #include "interrupts.h"
 #include "syscalls.h"
 #include "exceptions.h"
-#include "beepDriver.h";
+#include "beepDriver.h"
+#include "interrupts.h"
 
 #define STANDARD_INPUT 0
 #define STANDARD_OUTPUT 1
@@ -15,7 +16,7 @@
 
 void sysExitImpl();
 char sysReadCharImpl(uint32_t fileDesc);
-uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, uint32_t hexColor);
+uint64_t sysWriteColorImpl(uint32_t fileDesc, char* source, uint64_t len, uint32_t hexColor);
 uint64_t sysTimeImpl(int32_t * dest);
 
 void callBeep();
@@ -69,7 +70,7 @@ char sysReadCharImpl(uint32_t fileDesc){
     return getMsg();
 }
 
-uint64_t sysWriteColorImpl(uint32_t fileDesc, const char* source, uint64_t len, uint32_t hexColor){
+uint64_t sysWriteColorImpl(uint32_t fileDesc, char* source, uint64_t len, uint32_t hexColor){
     if(fileDesc != STANDARD_OUTPUT) {return -1;}
     printc(source, hexColor);
     return len;

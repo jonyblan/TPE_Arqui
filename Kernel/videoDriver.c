@@ -105,7 +105,7 @@ void setCursor(uint8_t x, uint8_t y) {
 uint32_t getPixel(uint64_t x, uint64_t y){
     uint8_t * framebuffer = (uint8_t *) VBE_mode_info->framebuffer;
     uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
-    uint32_t toReturn;
+    uint32_t toReturn = 0;
     toReturn |= framebuffer[offset];
     toReturn |= framebuffer[offset+1] << 8;
     toReturn |= framebuffer[offset+2] << 16;

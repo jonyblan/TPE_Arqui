@@ -12,7 +12,7 @@ char sysReadChar(uint32_t fileDesc);
 /**
  * sysWriteColor: inspirada en la funcion de Linux, imprime un string con color en formato 0x00RRGGBB.
  */
-uint64_t sysWriteColor(uint32_t fileDesc, char* source, uint64_t len, uint32_t hexColor);
+uint64_t sysWriteColor(uint32_t fileDesc, const char* source, uint64_t len, uint32_t hexColor);
 uint64_t sys_time(int32_t * dest);
 
 //Funciones definidas
